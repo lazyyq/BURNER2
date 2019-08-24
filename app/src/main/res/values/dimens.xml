@@ -1,3 +1,9 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_size_normal">56dp</dimen>
+    <dimen name="mini_fab_initial_alpha">0</dimen>
+    <dimen name="mini_fab_margin">16dp</dimen>
+    <dimen name="mini_fab_text_margin">4dp</dimen>
+    <dimen name="mini_fab_transition_distance">8dp</dimen>
+    <dimen name="fab_container_margin_end">16dp</dimen>
 </resources>

@@ -1,55 +1,164 @@
 package kyklab.burner2;
 
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import android.os.Handler;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class MainActivity extends AppCompatActivity {
+import kyklab.burner2.utils.ScreenUtils;
+import kyklab.burner2.utils.ViewUtils;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final int HIDE_DELAY = 3000;
+    private static final long MINI_FAB_ANIM_LENGTH = 300L;
+    private static final long MINI_FAB_ANIM_DELAY = 100L;
+    private final Handler mHideHandler = new Handler();
+    private View fabBackground;
+    private ImageView imageView;
+    private boolean mFullscreen = false;
+    private FloatingActionButton fab;
+    private float miniFabTransitionDistance;
+    private View[] miniFabs;
+    private View[] miniFabTexts;
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hideUi();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        imageView = findViewById(R.id.mainImage);
+        imageView.setOnClickListener(this);
+
+        setupFab();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (!mFullscreen) {
+            delayedHide(HIDE_DELAY);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        /*if (view == miniFabItems[0].findViewById(R.id.miniFab)) {
+            Toast.makeText(this, "0", Toast.LENGTH_SHORT).show();
+        } else if (view == miniFabItems[1].findViewById(R.id.miniFab)) {
+            Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
+        } else if (view == miniFabItems[2].findViewById(R.id.miniFab)) {
+            Toast.makeText(this, "2", Toast.LENGTH_SHORT).show();
+        } else */
+        if (id == R.id.mainImage) {
+            toggleFullscreen();
+            if (!mFullscreen) {
+                delayedHide(HIDE_DELAY);
+            }
+        } else if (id == R.id.fab) {
+            if (fab.isExpanded()) {
+                collapseFab();
+            } else {
+                expandFab();
+            }
+            delayedHide(HIDE_DELAY);
+        }
+    }
+
+    private void setupFab() {
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(this);
+
+        fabBackground = findViewById(R.id.fabBackground);
+        fabBackground.setOnClickListener(this);
+
+        View[] miniFabItems = new View[]{findViewById(R.id.miniFabItem1),
+                findViewById(R.id.miniFabItem2), findViewById(R.id.miniFabItem3)};
+
+        miniFabs = new View[miniFabItems.length];
+        for (int i = 0, len = miniFabs.length; i < len; ++i) {
+            miniFabs[i] = miniFabItems[i].findViewById(R.id.miniFab);
+        }
+
+        miniFabTexts = new View[miniFabItems.length];
+        for (int i = 0, len = miniFabTexts.length; i < len; ++i) {
+            miniFabTexts[i] = miniFabItems[i].findViewById(R.id.miniFabTextCard);
+        }
+
+        for (View v : miniFabItems) {
+            v.findViewById(R.id.miniFab).setOnClickListener(this);
+        }
+
+        final View miniFabContainer = findViewById(R.id.miniFabContainer);
+
+        final float fabSizeNormal = getResources().getDimension(R.dimen.fab_size_normal);
+        miniFabTransitionDistance = getResources().getDimension(R.dimen.mini_fab_transition_distance);
+
+        final View temp = miniFabs[0];
+        temp.post(new Runnable() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void run() {
+                final int miniFabSize = temp.getMeasuredHeight();
+                miniFabContainer.setPadding(0, 0,
+                        (int) (fabSizeNormal - miniFabSize) / 2, 0);
             }
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    private void toggleFullscreen() {
+        if (!mFullscreen) {
+            hideUi();
+        } else {
+            showUi();
+        }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    private void hideUi() {
+        ScreenUtils.hideSystemUi(this);
+        collapseFab();
+        fab.hide();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        mFullscreen = true;
+    }
 
-        return super.onOptionsItemSelected(item);
+    private void showUi() {
+        ScreenUtils.showSystemUi(this);
+        fab.show();
+
+        mFullscreen = false;
+    }
+
+    private void collapseFab() {
+        fabBackground.setVisibility(View.GONE);
+        ViewUtils.animateHideInOrder(
+                miniFabs, 0, miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
+        ViewUtils.animateHideInOrder(
+                miniFabTexts, 0, miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
+        fab.setExpanded(false);
+    }
+
+    private void expandFab() {
+        fabBackground.setVisibility(View.VISIBLE);
+        ViewUtils.animateShowInOrder(
+                miniFabs, 0, -miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
+        ViewUtils.animateShowInOrder(
+                miniFabTexts, 0, -miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
+        fab.setExpanded(true);
+    }
+
+    private void delayedHide(int delay) {
+        mHideHandler.removeCallbacks(mHideRunnable);
+        mHideHandler.postDelayed(mHideRunnable, delay);
     }
 }
