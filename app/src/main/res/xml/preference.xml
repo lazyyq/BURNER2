@@ -4,16 +4,16 @@
 
     <PreferenceCategory android:title="Picture">
 
+        <Preference
+            android:key="select_picture"
+            android:title="Select picture" />
+
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/rotation_entries"
             android:entryValues="@array/rotation_entry_values"
             android:key="rotation"
             android:title="Rotate picture" />
-
-        <Preference
-            android:key="select_picture"
-            android:title="Select picture" />
 
     </PreferenceCategory>
 
@@ -33,6 +33,11 @@
 
     <PreferenceCategory android:title="Device protection">
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="battery_limit"
+            android:title="Quit on low battery" />
+
         <SeekBarPreference
             android:defaultValue="15"
             android:key="battery_limit_percentage"
@@ -40,11 +45,6 @@
             android:title="Battery limit"
             app:min="10"
             app:showSeekBarValue="true" />
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="battery_limit"
-            android:title="Quit on low battery" />
 
     </PreferenceCategory>
 

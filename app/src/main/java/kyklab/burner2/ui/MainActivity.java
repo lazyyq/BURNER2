@@ -1,4 +1,4 @@
-package kyklab.burner2;
+package kyklab.burner2.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,19 +9,26 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import kyklab.burner2.R;
 import kyklab.burner2.settings.SettingsActivity;
+import kyklab.burner2.settings.selectpicture.PictureItem;
+import kyklab.burner2.utils.PrefManager;
 import kyklab.burner2.utils.ScreenUtils;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int HIDE_UI_DELAY = 3000;
-    private static final long MINI_FAB_ANIM_LENGTH = 300L;
-    private static final long MINI_FAB_ANIM_DELAY = 100L;
     private final Handler mHideHandler = new Handler();
-    private ImageView imageView;
-    private SpeedDialView fab;
+    private RotateLayout mRotateLayout;
+    private ImageView mImageView;
+    private SpeedDialView mFab;
     private boolean mFullscreen = false;
     private final Runnable mHideRunnable = new Runnable() {
         @Override
@@ -30,15 +37,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
+    private List<PictureItem> mPictureList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        imageView = findViewById(R.id.mainImage);
-        imageView.setOnClickListener(this);
+        mImageView = findViewById(R.id.mainImage);
+        mImageView.setOnClickListener(this);
+
+        mRotateLayout = findViewById(R.id.rotateLayout);
 
         setupFab();
+
+        mPictureList = new ArrayList<PictureItem>() {
+            {
+                add(new PictureItem("Picture 1", R.drawable.pic1));
+                add(new PictureItem("Picture 2", R.drawable.pic2));
+                add(new PictureItem("Picture 3", R.drawable.pic3));
+                add(new PictureItem("Picture 4", R.drawable.pic4));
+                add(new PictureItem("Picture 5", R.drawable.pic5));
+                add(new PictureItem("Picture 6", R.drawable.pic6));
+            }
+        };
     }
 
     @Override
@@ -47,6 +69,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (!mFullscreen) {
             delayedHideUi(HIDE_UI_DELAY);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!PrefManager.getInstance().getUseCustomPicture()) {
+            loadPicture();
         }
     }
 
@@ -62,10 +93,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void setupFab() {
-        fab = findViewById(R.id.fab);
+    private void loadPicture() {
+        int rotateAngle = Integer.parseInt(PrefManager.getInstance().getRotateAngle());
+        mRotateLayout.setAngle(rotateAngle);
+        Glide.with(this)
+                .load(mPictureList.get(PrefManager.getInstance().getSelectedPicture()).getResId())
+                .into(mImageView);
+    }
 
-        fab.setOnChangeListener(new SpeedDialView.OnChangeListener() {
+    private void setupFab() {
+        mFab = findViewById(R.id.fab);
+
+        mFab.setOnChangeListener(new SpeedDialView.OnChangeListener() {
             @Override
             public boolean onMainActionSelected() {
                 return false;
@@ -78,20 +117,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        fab.addActionItem(
+        mFab.addActionItem(
                 new SpeedDialActionItem
                         .Builder(R.id.fab_settings, R.drawable.ic_settings_white_24dp)
                         .setTheme(android.R.style.Theme_Material_Light)
                         .setLabel("Settings")
                         .create());
-        fab.addActionItem(
+        mFab.addActionItem(
                 new SpeedDialActionItem
                         .Builder(R.id.fab_temp, R.drawable.ic_settings_white_24dp)
                         .setLabel("temp")
                         .setTheme(android.R.style.Theme_Material_Light)
                         .create());
 
-        fab.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
+        mFab.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
             @Override
             public boolean onActionSelected(SpeedDialActionItem actionItem) {
                 switch (actionItem.getId()) {
@@ -110,8 +149,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 /*
 
     private void setupFab() {
-        fab = findViewById(R.id.fab);
-        fab.setOnClickListener(this);
+        mFab = findViewById(R.id.mFab);
+        mFab.setOnClickListener(this);
 
         fabBackground = findViewById(R.id.fabBackground);
         fabBackground.setOnClickListener(this);
@@ -161,14 +200,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void hideUi() {
         ScreenUtils.hideSystemUi(this);
         //collapseFab();
-        fab.hide();
+        mFab.hide();
 
         mFullscreen = true;
     }
 
     private void showUi() {
         ScreenUtils.showSystemUi(this);
-        fab.show();
+        mFab.show();
 
         mFullscreen = false;
     }
@@ -179,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 miniFabs, 0, miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
         ViewUtils.animateHideInOrder(
                 miniFabTexts, 0, miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
-        fab.setExpanded(false);
+        mFab.setExpanded(false);
     }*/
 
     /*private void expandFab() {
@@ -188,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 miniFabs, 0, -miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
         ViewUtils.animateShowInOrder(
                 miniFabTexts, 0, -miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
-        fab.setExpanded(true);
+        mFab.setExpanded(true);
     }*/
 
     private void delayedHideUi(int delay) {
