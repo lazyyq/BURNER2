@@ -1,29 +1,28 @@
 package kyklab.burner2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialView;
 
+import kyklab.burner2.settings.SettingsActivity;
 import kyklab.burner2.utils.ScreenUtils;
-import kyklab.burner2.utils.ViewUtils;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final int HIDE_DELAY = 3000;
+    private static final int HIDE_UI_DELAY = 3000;
     private static final long MINI_FAB_ANIM_LENGTH = 300L;
     private static final long MINI_FAB_ANIM_DELAY = 100L;
     private final Handler mHideHandler = new Handler();
-    private View fabBackground;
     private ImageView imageView;
+    private SpeedDialView fab;
     private boolean mFullscreen = false;
-    private FloatingActionButton fab;
-    private float miniFabTransitionDistance;
-    private View[] miniFabs;
-    private View[] miniFabTexts;
     private final Runnable mHideRunnable = new Runnable() {
         @Override
         public void run() {
@@ -47,34 +46,68 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onStart();
 
         if (!mFullscreen) {
-            delayedHide(HIDE_DELAY);
+            delayedHideUi(HIDE_UI_DELAY);
         }
     }
 
     @Override
     public void onClick(View view) {
-        int id = view.getId();
-        /*if (view == miniFabItems[0].findViewById(R.id.miniFab)) {
-            Toast.makeText(this, "0", Toast.LENGTH_SHORT).show();
-        } else if (view == miniFabItems[1].findViewById(R.id.miniFab)) {
-            Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
-        } else if (view == miniFabItems[2].findViewById(R.id.miniFab)) {
-            Toast.makeText(this, "2", Toast.LENGTH_SHORT).show();
-        } else */
-        if (id == R.id.mainImage) {
-            toggleFullscreen();
-            if (!mFullscreen) {
-                delayedHide(HIDE_DELAY);
-            }
-        } else if (id == R.id.fab) {
-            if (fab.isExpanded()) {
-                collapseFab();
-            } else {
-                expandFab();
-            }
-            delayedHide(HIDE_DELAY);
+        switch (view.getId()) {
+            case R.id.mainImage:
+                toggleFullscreen();
+                if (!mFullscreen) {
+                    delayedHideUi(HIDE_UI_DELAY);
+                }
+                break;
         }
     }
+
+    private void setupFab() {
+        fab = findViewById(R.id.fab);
+
+        fab.setOnChangeListener(new SpeedDialView.OnChangeListener() {
+            @Override
+            public boolean onMainActionSelected() {
+                return false;
+            }
+
+            @Override
+            public void onToggleChanged(boolean isOpen) {
+                // Reset hide delay on every click
+                delayedHideUi(HIDE_UI_DELAY);
+            }
+        });
+
+        fab.addActionItem(
+                new SpeedDialActionItem
+                        .Builder(R.id.fab_settings, R.drawable.ic_settings_white_24dp)
+                        .setTheme(android.R.style.Theme_Material_Light)
+                        .setLabel("Settings")
+                        .create());
+        fab.addActionItem(
+                new SpeedDialActionItem
+                        .Builder(R.id.fab_temp, R.drawable.ic_settings_white_24dp)
+                        .setLabel("temp")
+                        .setTheme(android.R.style.Theme_Material_Light)
+                        .create());
+
+        fab.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
+            @Override
+            public boolean onActionSelected(SpeedDialActionItem actionItem) {
+                switch (actionItem.getId()) {
+                    case R.id.fab_settings:
+                        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.fab_temp:
+                        Toast.makeText(MainActivity.this, "fab_temp", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+/*
 
     private void setupFab() {
         fab = findViewById(R.id.fab);
@@ -115,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+*/
 
     private void toggleFullscreen() {
         if (!mFullscreen) {
@@ -126,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void hideUi() {
         ScreenUtils.hideSystemUi(this);
-        collapseFab();
+        //collapseFab();
         fab.hide();
 
         mFullscreen = true;
@@ -139,25 +173,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFullscreen = false;
     }
 
-    private void collapseFab() {
+    /*private void collapseFab() {
         fabBackground.setVisibility(View.GONE);
         ViewUtils.animateHideInOrder(
                 miniFabs, 0, miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
         ViewUtils.animateHideInOrder(
                 miniFabTexts, 0, miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
         fab.setExpanded(false);
-    }
+    }*/
 
-    private void expandFab() {
+    /*private void expandFab() {
         fabBackground.setVisibility(View.VISIBLE);
         ViewUtils.animateShowInOrder(
                 miniFabs, 0, -miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
         ViewUtils.animateShowInOrder(
                 miniFabTexts, 0, -miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
         fab.setExpanded(true);
-    }
+    }*/
 
-    private void delayedHide(int delay) {
+    private void delayedHideUi(int delay) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delay);
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
@@ -8,24 +8,18 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.leinardi.android.speeddial.SpeedDialOverlayLayout
+        android:id="@+id/fabBlockLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.leinardi.android.speeddial.SpeedDialView
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:barrierAllowsGoneWidgets="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_more_vert_24dp" />
+        android:layout_gravity="bottom|end"
+        app:sdMainFabAnimationRotateAngle="0"
+        app:sdMainFabClosedSrc="@drawable/ic_more_vert_white_24dp"
+        app:sdOverlayLayout="@id/fabBlockLayout" />
 
-    <include layout="@layout/background_block" />
-
-    <include
-        layout="@layout/mini_fabs_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintBottom_toTopOf="@id/fab"
-        app:layout_constraintEnd_toEndOf="@id/fab" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

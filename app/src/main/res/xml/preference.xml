@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="Picture">
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/rotation_entries"
+            android:entryValues="@array/rotation_entry_values"
+            android:key="rotation"
+            android:title="Rotate picture" />
+
+        <Preference
+            android:key="select_picture"
+            android:title="Select picture" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Screen">
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="keep_screen_on"
+            android:title="Keep screen on" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="max_brightness"
+            android:title="Maximum brightness" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Device protection">
+
+        <SeekBarPreference
+            android:defaultValue="15"
+            android:key="battery_limit_percentage"
+            android:max="99"
+            android:title="Battery limit"
+            app:min="10"
+            app:showSeekBarValue="true" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="battery_limit"
+            android:title="Quit on low battery" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
