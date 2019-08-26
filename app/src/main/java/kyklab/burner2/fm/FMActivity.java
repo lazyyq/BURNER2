@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -60,22 +61,38 @@ public class FMActivity extends AppCompatActivity {
     }
 
     public void refreshFileList() {
-        mRefreshTask = new RefreshTask();
+        mRefreshTask = new RefreshTask(this);
         mRefreshTask.execute();
     }
 
-    class RefreshTask extends AsyncTask<Void, Void, Void> {
+    static class RefreshTask extends AsyncTask<Void, Void, Void> {
+        private final WeakReference<FMActivity> activityWeakReference;
+
+        RefreshTask(FMActivity activity) {
+            this.activityWeakReference = new WeakReference<>(activity);
+        }
+
         @Override
         protected void onPreExecute() {
-            mProgressBar.setVisibility(View.VISIBLE);
+            FMActivity activity = activityWeakReference.get();
+            if (activity == null || activity.isFinishing()) {
+                return;
+            }
+
+            activity.mProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
+            FMActivity activity = activityWeakReference.get();
+            if (activity == null || activity.isFinishing()) {
+                return null;
+            }
+
             List<FileItem> tempFileList = new ArrayList<>();
             List<FileItem> tempDirList = new ArrayList<>();
 
-            File current = new File(mCurrentPath);
+            File current = new File(activity.mCurrentPath);
             String[] files = current.list(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
@@ -94,11 +111,11 @@ public class FMActivity extends AppCompatActivity {
 
                 Arrays.sort(files);
                 for (String name : files) {
-                    path = mCurrentPath + File.separator + name;
+                    path = activity.mCurrentPath + File.separator + name;
                     if (FMUtils.isDirectory(path)) {
                         tempDirList.add(new FileItem(
-                                getResources().getDrawable(R.drawable.ic_folder_36dp,
-                                        getTheme()), path, name, true));
+                                activity.getResources().getDrawable(R.drawable.ic_folder_36dp,
+                                        activity.getTheme()), path, name, true));
                     } else {
                         tempFileList.add(new FileItem(
                                 Drawable.createFromPath(path), path, name, false));
@@ -106,17 +123,22 @@ public class FMActivity extends AppCompatActivity {
                 }
             }
 
-            mFileList.clear();
-            mFileList.addAll(tempDirList);
-            mFileList.addAll(tempFileList);
+            activity.mFileList.clear();
+            activity.mFileList.addAll(tempDirList);
+            activity.mFileList.addAll(tempFileList);
 
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            mAdapter.notifyDataSetChanged();
-            mProgressBar.setVisibility(View.GONE);
+            FMActivity activity = activityWeakReference.get();
+            if (activity == null || activity.isFinishing()) {
+                return;
+            }
+
+            activity.mAdapter.notifyDataSetChanged();
+            activity.mProgressBar.setVisibility(View.GONE);
         }
     }
 }
