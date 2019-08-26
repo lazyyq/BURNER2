@@ -11,6 +11,10 @@ public class PrefManager {
     public static final String KEY_SELECTED_PICTURE = "selected_picture";
     public static final String KEY_USE_CUSTOM_PICTURE = "use_custom_picture";
     public static final String KEY_ROTATE_ANGLE = "rotation";
+    public static final String KEY_BATTERY_LIMIT = "battery_limit";
+    public static final String KEY_BATTERY_LIMIT_ENABLED = "battery_limit_enabled";
+    public static final String KEY_KEEP_SCREEN_ON = "keep_screen_on";
+    public static final String KEY_MAX_BRIGHTNESS = "max_brightness";
     private static SharedPreferences pref;
     private static SharedPreferences.Editor editor;
 
@@ -24,9 +28,16 @@ public class PrefManager {
         return LazyHolder.INSTANCE;
     }
 
-    public static void registerPreferenceChangeListener(
+    public static void registerPrefChangeListener(
             SharedPreferences.OnSharedPreferenceChangeListener listener) {
-        pref.registerOnSharedPreferenceChangeListener(listener);
+        PreferenceManager.getDefaultSharedPreferences(App.getContext())
+                .registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    public static void unregisterPrefChangeListener(
+            SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        PreferenceManager.getDefaultSharedPreferences(App.getContext())
+                .unregisterOnSharedPreferenceChangeListener(listener);
     }
 
     public int getSelectedPicture() {
@@ -50,7 +61,39 @@ public class PrefManager {
     }
 
     public void setRotateAngle(String s) {
-        editor.putString(KEY_ROTATE_ANGLE, s);
+        editor.putString(KEY_ROTATE_ANGLE, s).apply();
+    }
+
+    public int getBatteryLimit() {
+        return pref.getInt(KEY_BATTERY_LIMIT, 15);
+    }
+
+    public void setBatteryLimit(int i) {
+        editor.putInt(KEY_BATTERY_LIMIT, i).apply();
+    }
+
+    public boolean getBatteryLimitEnabled() {
+        return pref.getBoolean(KEY_BATTERY_LIMIT_ENABLED, false);
+    }
+
+    public void setBatteryLimitEnabled(boolean b) {
+        editor.putBoolean(KEY_BATTERY_LIMIT_ENABLED, b).apply();
+    }
+
+    public boolean getKeepScreenOn() {
+        return pref.getBoolean(KEY_KEEP_SCREEN_ON, true);
+    }
+
+    public void setKeepScreenOn(boolean b) {
+        editor.putBoolean(KEY_KEEP_SCREEN_ON, b).apply();
+    }
+
+    public boolean getMaxBrightness() {
+        return pref.getBoolean(KEY_MAX_BRIGHTNESS, false);
+    }
+
+    public void setMaxBrightness(boolean b) {
+        editor.putBoolean(KEY_MAX_BRIGHTNESS, b).apply();
     }
 
     private static class LazyHolder {

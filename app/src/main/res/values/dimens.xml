@@ -6,6 +6,7 @@
     <dimen name="mini_fab_text_margin">4dp</dimen>
     <dimen name="mini_fab_transition_distance">8dp</dimen>
     <dimen name="fab_container_margin_end">16dp</dimen>
-    <dimen name="settings_app_bar_height">180dp</dimen>
+    <dimen name="settings_app_bar_height">240dp</dimen>
     <dimen name="picture_list_margin">4dp</dimen>
+    <dimen name="recycler_view_padding_bottom">96dp</dimen>
 </resources>

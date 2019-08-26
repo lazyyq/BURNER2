@@ -8,19 +8,31 @@
     tools:context=".settings.SettingsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
+        android:id="@+id/settings_app_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_app_bar_height"
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
+            android:id="@+id/settings_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:toolbarId="@+id/settings_toolbar">
+
+            <com.github.rongi.rotate_layout.layout.RotateLayout
+                android:id="@+id/settings_rotate_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_collapseMode="parallax">
+
+                <ImageView
+                    android:id="@+id/settings_toolbar_background_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.github.rongi.rotate_layout.layout.RotateLayout>
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/settings_toolbar"

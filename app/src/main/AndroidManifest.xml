@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="kyklab.burner2">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -24,8 +25,14 @@
         </activity>
         <activity
             android:name=".settings.SettingsActivity"
+            android:label="@string/settings"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".settings.selectpicture.SelectPictureActivity" />
+        <activity
+            android:name=".settings.selectpicture.SelectPictureActivity"
+            android:label="@string/select_picture" />
+        <activity
+            android:name=".fm.FMActivity"
+            android:label="@string/select_picture" />
     </application>
 
 </manifest>

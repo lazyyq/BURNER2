@@ -49,6 +49,22 @@ public class PicturePreviewListAdapter extends RecyclerView.Adapter<PicturePrevi
     }
 
     @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position,
+                                 @NonNull List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads);
+        } else {
+            for (Object payload : payloads) {
+                if (payload instanceof Boolean) {
+                    holder.picturePreviewChecked.setVisibility(
+                            (boolean) payload ? View.VISIBLE : View.GONE
+                    );
+                }
+            }
+        }
+    }
+
+    @Override
     public int getItemCount() {
         return mThumbnailList.size();
     }
@@ -69,8 +85,8 @@ public class PicturePreviewListAdapter extends RecyclerView.Adapter<PicturePrevi
                 public void onClick(View view) {
                     PrefManager.getInstance().setSelectedPicture(getAdapterPosition());
                     PrefManager.getInstance().setUseCustomPicture(false);
-                    PicturePreviewListAdapter.this.notifyItemChanged(mCheckedPosition);
-                    PicturePreviewListAdapter.this.notifyItemChanged(getAdapterPosition());
+                    PicturePreviewListAdapter.this.notifyItemChanged(mCheckedPosition, false);
+                    PicturePreviewListAdapter.this.notifyItemChanged(getAdapterPosition(), true);
                     mCheckedPosition = getAdapterPosition();
                 }
             });

@@ -11,10 +11,16 @@ import kyklab.burner2.R;
 import kyklab.burner2.settings.selectpicture.SelectPictureActivity;
 import kyklab.burner2.utils.PrefManager;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
+public class SettingsFragment extends PreferenceFragmentCompat
+        implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
     private Preference selectPicture;
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        if (getActivity() == null) {
+            return;
+        }
+
         setPreferencesFromResource(R.xml.preference, rootKey);
 
         selectPicture = findPreference(PrefManager.KEY_SELECT_PICTURE);

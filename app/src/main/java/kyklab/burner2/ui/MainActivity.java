@@ -14,10 +14,12 @@ import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import kyklab.burner2.App;
 import kyklab.burner2.R;
+import kyklab.burner2.batterylimit.BatteryLimiter;
 import kyklab.burner2.settings.SettingsActivity;
 import kyklab.burner2.settings.selectpicture.PictureItem;
 import kyklab.burner2.utils.PrefManager;
@@ -25,17 +27,21 @@ import kyklab.burner2.utils.ScreenUtils;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int HIDE_UI_DELAY = 3000;
-    private final Handler mHideHandler = new Handler();
+    private final Handler mHandler = new Handler();
     private RotateLayout mRotateLayout;
     private ImageView mImageView;
     private SpeedDialView mFab;
     private boolean mFullscreen = false;
-    private final Runnable mHideRunnable = new Runnable() {
+    private final Runnable mHideUiRunnable = new Runnable() {
         @Override
         public void run() {
             hideUi();
+            if (PrefManager.getInstance().getMaxBrightness()) {
+                ScreenUtils.setMaxBrightness(MainActivity.this);
+            }
         }
     };
+    private BatteryLimiter batteryLimiter;
 
     private List<PictureItem> mPictureList;
 
@@ -51,16 +57,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setupFab();
 
-        mPictureList = new ArrayList<PictureItem>() {
-            {
-                add(new PictureItem("Picture 1", R.drawable.pic1));
-                add(new PictureItem("Picture 2", R.drawable.pic2));
-                add(new PictureItem("Picture 3", R.drawable.pic3));
-                add(new PictureItem("Picture 4", R.drawable.pic4));
-                add(new PictureItem("Picture 5", R.drawable.pic5));
-                add(new PictureItem("Picture 6", R.drawable.pic6));
-            }
-        };
+        mPictureList = App.getPictureList();
+        mPictureList.addAll(Arrays.asList(
+                new PictureItem("Picture 1", R.drawable.pic1),
+                new PictureItem("Picture 2", R.drawable.pic2),
+                new PictureItem("Picture 3", R.drawable.pic3),
+                new PictureItem("Picture 4", R.drawable.pic4),
+                new PictureItem("Picture 5", R.drawable.pic5),
+                new PictureItem("Picture 6", R.drawable.pic6)));
+
+        batteryLimiter = new BatteryLimiter(this, findViewById(R.id.coordinatorLayout));
     }
 
     @Override
@@ -79,6 +85,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (!PrefManager.getInstance().getUseCustomPicture()) {
             loadPicture();
         }
+
+        if (PrefManager.getInstance().getKeepScreenOn()) {
+            ScreenUtils.setKeepScreenOn(this);
+        }
+
+        if (PrefManager.getInstance().getBatteryLimitEnabled()) {
+            batteryLimiter.start();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        batteryLimiter.stop();
+        ScreenUtils.resetBrightness(this);
     }
 
     @Override
@@ -86,7 +108,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.mainImage:
                 toggleFullscreen();
-                if (!mFullscreen) {
+                if (mFullscreen) {
+                    ScreenUtils.setMaxBrightness(this);
+                } else {
+                    ScreenUtils.resetBrightness(this);
                     delayedHideUi(HIDE_UI_DELAY);
                 }
                 break;
@@ -231,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }*/
 
     private void delayedHideUi(int delay) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delay);
+        mHandler.removeCallbacks(mHideUiRunnable);
+        mHandler.postDelayed(mHideUiRunnable, delay);
     }
 }

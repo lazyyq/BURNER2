@@ -2,48 +2,61 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="Picture">
+    <PreferenceCategory
+        android:title="Picture"
+        app:iconSpaceReserved="false">
 
         <Preference
             android:key="select_picture"
-            android:title="Select picture" />
+            android:title="Select picture"
+            app:iconSpaceReserved="false" />
 
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/rotation_entries"
             android:entryValues="@array/rotation_entry_values"
             android:key="rotation"
-            android:title="Rotate picture" />
+            android:title="Rotate picture"
+            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Screen">
+    <PreferenceCategory
+        android:title="Screen"
+        app:iconSpaceReserved="false">
 
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="keep_screen_on"
-            android:title="Keep screen on" />
+            android:title="Keep screen on"
+            app:iconSpaceReserved="false" />
 
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="max_brightness"
-            android:title="Maximum brightness" />
+            android:title="Maximum brightness"
+            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Device protection">
+    <PreferenceCategory
+        android:title="Device protection"
+        app:iconSpaceReserved="false">
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="battery_limit"
-            android:title="Quit on low battery" />
+            android:key="battery_limit_enabled"
+            android:title="Quit on low battery"
+            app:iconSpaceReserved="false" />
 
         <SeekBarPreference
             android:defaultValue="15"
-            android:key="battery_limit_percentage"
+            android:dependency="battery_limit_enabled"
             android:max="99"
             android:title="Battery limit"
+            android:key="battery_limit"
             app:min="10"
+            app:iconSpaceReserved="false"
             app:showSeekBarValue="true" />
 
     </PreferenceCategory>

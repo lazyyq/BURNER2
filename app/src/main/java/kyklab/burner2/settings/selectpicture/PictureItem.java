@@ -1,5 +1,7 @@
 package kyklab.burner2.settings.selectpicture;
 
+import androidx.annotation.Nullable;
+
 public class PictureItem {
     private String name;
     private int resId;
@@ -23,5 +25,16 @@ public class PictureItem {
 
     public void setResId(int resId) {
         this.resId = resId;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof PictureItem) {
+            PictureItem target = (PictureItem) obj;
+            return this.name.equals(target.name)
+                    && this.resId == target.resId;
+        } else {
+            return false;
+        }
     }
 }
