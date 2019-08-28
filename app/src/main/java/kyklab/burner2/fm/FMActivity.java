@@ -13,11 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.bottomappbar.BottomAppBar;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -43,8 +44,8 @@ public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fm);
-        Toolbar toolbar = findViewById(R.id.fmToolbar);
-        setSupportActionBar(toolbar);
+        BottomAppBar mBottomAppBar = findViewById(R.id.fmBottomAppBar);
+        setSupportActionBar(mBottomAppBar);
 
         mActionBar = getSupportActionBar();
         if (mActionBar != null) {
