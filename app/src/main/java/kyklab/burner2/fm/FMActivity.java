@@ -3,13 +3,17 @@ package kyklab.burner2.fm;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,12 +30,11 @@ import kyklab.burner2.R;
 public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
     private String mCurrentPath;
     private List<File> mFileList;
+    private ActionBar mActionBar;
+    private TextView mToolbarText;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
-    private ImageView mUpperDirIcon;
-    private ImageView mHomeDirIcon;
-    private TextView mCurrentDirView;
     private FMAdapter mAdapter;
     private RefreshTask mRefreshTask;
     private int mCurrentDepth;
@@ -40,6 +43,13 @@ public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fm);
+        Toolbar toolbar = findViewById(R.id.fmToolbar);
+        setSupportActionBar(toolbar);
+
+        mActionBar = getSupportActionBar();
+        if (mActionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         initFM();
         refreshFileList();
@@ -61,11 +71,31 @@ public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_fm, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.fm_action_home:
+                gotoHomeDirectory();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void initFM() {
+        mToolbarText = findViewById(R.id.fmToolbarText);
         mRecyclerView = findViewById(R.id.fmRecyclerView);
         mProgressBar = findViewById(R.id.fmProgressBar);
         mFileList = new ArrayList<>();
-        mCurrentDirView = findViewById(R.id.fmCurrentDirectory);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new FMAdapter(this, mFileList);
@@ -78,20 +108,6 @@ public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
             public void onRefresh() {
                 refreshFileList();
                 mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
-        mUpperDirIcon = findViewById(R.id.fmUpperDirectory);
-        mUpperDirIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                gotoUpperDirectory();
-            }
-        });
-        mHomeDirIcon = findViewById(R.id.fmHomeDir);
-        mHomeDirIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                gotoHomeDirectory();
             }
         });
 
@@ -137,6 +153,7 @@ public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
     }
 
     private void switchToDirectory(String path) {
+        mToolbarText.setText(path);
         mCurrentPath = path;
         refreshFileList();
     }
@@ -204,7 +221,6 @@ public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
                 return;
             }
 
-            activity.mCurrentDirView.setText(activity.mCurrentPath);
             activity.mAdapter.notifyDataSetChanged();
             activity.mProgressBar.setVisibility(View.GONE);
         }

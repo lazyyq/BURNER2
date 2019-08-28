@@ -32,7 +32,8 @@
             android:label="@string/select_picture" />
         <activity
             android:name=".fm.FMActivity"
-            android:label="@string/select_picture" />
+            android:label="@string/select_picture"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
