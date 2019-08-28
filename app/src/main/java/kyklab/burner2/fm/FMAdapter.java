@@ -12,17 +12,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.File;
 import java.util.List;
 
 import kyklab.burner2.R;
 
 public class FMAdapter extends RecyclerView.Adapter<FMAdapter.ViewHolder> {
     private final Context pContext;
-    private final List<FileItem> mFileList;
+    private final FMAdapterCallback mCallback;
+    private final List<File> mFileList;
 
-    public FMAdapter(Context pContext, List<FileItem> mFileList) {
+    public FMAdapter(Context pContext, List<File> mFileList) {
         this.pContext = pContext;
         this.mFileList = mFileList;
+        this.mCallback = (FMAdapterCallback) pContext;
     }
 
     @NonNull
@@ -35,13 +38,14 @@ public class FMAdapter extends RecyclerView.Adapter<FMAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        FileItem fileItem = mFileList.get(position);
-        if (fileItem.isDirectory()) {
-            Glide.with(pContext).load(fileItem.getIcon()).into(holder.fileIconView);
+        File file = mFileList.get(position);
+        if (file.isDirectory()) {
+            Glide.with(pContext).clear(holder.fileIconView);
+            holder.fileIconView.setImageResource(R.drawable.ic_folder_36dp);
         } else {
-            Glide.with(pContext).load(fileItem.getIcon()).centerCrop().into(holder.fileIconView);
+            Glide.with(pContext).load(file).centerCrop().into(holder.fileIconView);
         }
-        holder.fileNameView.setText(fileItem.getName());
+        holder.fileNameView.setText(file.getName());
     }
 
     @Override
@@ -57,6 +61,17 @@ public class FMAdapter extends RecyclerView.Adapter<FMAdapter.ViewHolder> {
             super(itemView);
             fileIconView = itemView.findViewById(R.id.fileIconView);
             fileNameView = itemView.findViewById(R.id.fileNameView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    File file = mFileList.get(getAdapterPosition());
+                    if (file.isDirectory()) {
+                        mCallback.enterDirectory(file.getName());
+                    } else {
+                    }
+                }
+            });
         }
     }
 }

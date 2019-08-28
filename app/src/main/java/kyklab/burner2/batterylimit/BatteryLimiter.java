@@ -46,7 +46,8 @@ public class BatteryLimiter implements SharedPreferences.OnSharedPreferenceChang
             }
         };
         filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        mSnackbar = Snackbar.make(layout, "Battery is low, exiting in 3 seconds.",
+        mSnackbar = Snackbar.make(layout,
+                "Battery is low, exiting in " + (EXIT_TIMEOUT / 1000) + " seconds.",
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(android.R.string.cancel, new View.OnClickListener() {
                     @Override
