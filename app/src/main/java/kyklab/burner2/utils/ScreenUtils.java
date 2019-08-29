@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+@SuppressWarnings("WeakerAccess")
 public class ScreenUtils {
     public static final int fullscreenOpts =
             View.SYSTEM_UI_FLAG_HIDE_NAVIGATION

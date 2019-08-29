@@ -18,11 +18,11 @@ public class BatteryLimiter implements SharedPreferences.OnSharedPreferenceChang
     private static final int EXIT_TIMEOUT = 3000;
     private final Context context;
     //private final View layout;
-    private Handler mHandler;
-    private BroadcastReceiver mBroadcastReceiver;
-    private Runnable mExitRunnable;
-    private IntentFilter filter;
-    private Snackbar mSnackbar;
+    private final Handler mHandler;
+    private final BroadcastReceiver mBroadcastReceiver;
+    private final Runnable mExitRunnable;
+    private final IntentFilter filter;
+    private final Snackbar mSnackbar;
 
     private boolean mTimeoutRunning;
     private boolean mReceiverRegistered;

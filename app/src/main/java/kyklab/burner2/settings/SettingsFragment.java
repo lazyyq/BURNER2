@@ -8,7 +8,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import kyklab.burner2.R;
-import kyklab.burner2.settings.selectpicture.SelectPictureActivity;
+import kyklab.burner2.selectpicture.SelectPictureActivity;
 import kyklab.burner2.utils.PrefManager;
 
 public class SettingsFragment extends PreferenceFragmentCompat
@@ -24,7 +24,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
         setPreferencesFromResource(R.xml.preference, rootKey);
 
         selectPicture = findPreference(PrefManager.KEY_SELECT_PICTURE);
-        selectPicture.setOnPreferenceClickListener(this);
+        if (selectPicture != null) {
+            selectPicture.setOnPreferenceClickListener(this);
+        }
     }
 
     @Override

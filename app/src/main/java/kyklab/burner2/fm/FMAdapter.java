@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.File;
 import java.util.List;
@@ -43,7 +44,10 @@ public class FMAdapter extends RecyclerView.Adapter<FMAdapter.ViewHolder> {
             Glide.with(pContext).clear(holder.fileIconView);
             holder.fileIconView.setImageResource(R.drawable.ic_folder_36dp);
         } else {
-            Glide.with(pContext).load(file).centerCrop().into(holder.fileIconView);
+            Glide.with(pContext).load(file).centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .into(holder.fileIconView);
         }
         holder.fileNameView.setText(file.getName());
     }
@@ -57,7 +61,7 @@ public class FMAdapter extends RecyclerView.Adapter<FMAdapter.ViewHolder> {
         private final ImageView fileIconView;
         private final TextView fileNameView;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             fileIconView = itemView.findViewById(R.id.fileIconView);
             fileNameView = itemView.findViewById(R.id.fileNameView);
@@ -69,6 +73,7 @@ public class FMAdapter extends RecyclerView.Adapter<FMAdapter.ViewHolder> {
                     if (file.isDirectory()) {
                         mCallback.enterDirectory(file.getName());
                     } else {
+                        mCallback.customPictureSelected(file.getAbsolutePath());
                     }
                 }
             });

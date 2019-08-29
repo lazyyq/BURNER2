@@ -10,18 +10,18 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
-import java.util.Arrays;
 import java.util.List;
 
 import kyklab.burner2.App;
 import kyklab.burner2.R;
 import kyklab.burner2.batterylimit.BatteryLimiter;
+import kyklab.burner2.selectpicture.PictureItem;
 import kyklab.burner2.settings.SettingsActivity;
-import kyklab.burner2.settings.selectpicture.PictureItem;
 import kyklab.burner2.utils.PrefManager;
 import kyklab.burner2.utils.ScreenUtils;
 
@@ -52,19 +52,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mImageView = findViewById(R.id.mainImage);
         mImageView.setOnClickListener(this);
-
         mRotateLayout = findViewById(R.id.rotateLayout);
 
-        setupFab();
-
         mPictureList = App.getPictureList();
-        mPictureList.addAll(Arrays.asList(
-                new PictureItem("Picture 1", R.drawable.pic1),
-                new PictureItem("Picture 2", R.drawable.pic2),
-                new PictureItem("Picture 3", R.drawable.pic3),
-                new PictureItem("Picture 4", R.drawable.pic4),
-                new PictureItem("Picture 5", R.drawable.pic5),
-                new PictureItem("Picture 6", R.drawable.pic6)));
+        setupFab();
+        App.updatePictureList();
 
         batteryLimiter = new BatteryLimiter(this, findViewById(R.id.coordinatorLayout));
     }
@@ -82,12 +74,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
 
-        if (!PrefManager.getInstance().getUseCustomPicture()) {
-            loadPicture();
-        }
+        loadPicture();
 
         if (PrefManager.getInstance().getKeepScreenOn()) {
             ScreenUtils.setKeepScreenOn(this);
+        } else {
+            ScreenUtils.unsetKeepScreenOn(this);
         }
 
         if (PrefManager.getInstance().getBatteryLimitEnabled()) {
@@ -122,7 +114,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int rotateAngle = Integer.parseInt(PrefManager.getInstance().getRotateAngle());
         mRotateLayout.setAngle(rotateAngle);
         Glide.with(this)
-                .load(mPictureList.get(PrefManager.getInstance().getSelectedPicture()).getResId())
+                .load(mPictureList.get(PrefManager.getInstance().getSelectedPictureIndex()).getPicture())
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(mImageView);
     }
 

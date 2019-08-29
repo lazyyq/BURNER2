@@ -28,7 +28,7 @@
             android:label="@string/settings"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".settings.selectpicture.SelectPictureActivity"
+            android:name=".selectpicture.SelectPictureActivity"
             android:label="@string/select_picture" />
         <activity
             android:name=".fm.FMActivity"

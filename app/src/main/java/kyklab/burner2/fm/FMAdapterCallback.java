@@ -1,7 +1,9 @@
 package kyklab.burner2.fm;
 
-public interface FMAdapterCallback {
-    public void gotoUpperDirectory();
+interface FMAdapterCallback {
+    void gotoUpperDirectory();
 
-    public void enterDirectory(String dir);
+    void enterDirectory(String dir);
+
+    void customPictureSelected(Object obj);
 }

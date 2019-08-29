@@ -6,9 +6,10 @@ import androidx.preference.PreferenceManager;
 
 import kyklab.burner2.App;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class PrefManager {
     public static final String KEY_SELECT_PICTURE = "select_picture";
-    public static final String KEY_SELECTED_PICTURE = "selected_picture";
+    public static final String KEY_SELECTED_PICTURE_INDEX = "selected_picture_index";
     public static final String KEY_USE_CUSTOM_PICTURE = "use_custom_picture";
     public static final String KEY_ROTATE_ANGLE = "rotation";
     public static final String KEY_BATTERY_LIMIT = "battery_limit";
@@ -24,6 +25,7 @@ public class PrefManager {
         editor.apply();
     }
 
+    @SuppressWarnings("SameReturnValue")
     public static PrefManager getInstance() {
         return LazyHolder.INSTANCE;
     }
@@ -40,12 +42,12 @@ public class PrefManager {
                 .unregisterOnSharedPreferenceChangeListener(listener);
     }
 
-    public int getSelectedPicture() {
-        return pref.getInt(KEY_SELECTED_PICTURE, 0);
+    public int getSelectedPictureIndex() {
+        return pref.getInt(KEY_SELECTED_PICTURE_INDEX, 0);
     }
 
-    public void setSelectedPicture(int i) {
-        editor.putInt(KEY_SELECTED_PICTURE, i).apply();
+    public void setSelectedPictureIndex(int i) {
+        editor.putInt(KEY_SELECTED_PICTURE_INDEX, i).apply();
     }
 
     public boolean getUseCustomPicture() {
@@ -97,6 +99,6 @@ public class PrefManager {
     }
 
     private static class LazyHolder {
-        public static final PrefManager INSTANCE = new PrefManager();
+        static final PrefManager INSTANCE = new PrefManager();
     }
 }

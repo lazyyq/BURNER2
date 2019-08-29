@@ -1,5 +1,8 @@
 package kyklab.burner2.fm;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,12 +32,11 @@ import java.util.List;
 import kyklab.burner2.R;
 
 public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
+    private static final int REQ_CODE_ACTIVITY_DOCUMENTS_UI = 100;
     private String mCurrentPath;
     private List<File> mFileList;
-    private ActionBar mActionBar;
     private TextView mToolbarText;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
     private FMAdapter mAdapter;
     private RefreshTask mRefreshTask;
@@ -47,7 +49,7 @@ public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
         BottomAppBar mBottomAppBar = findViewById(R.id.fmBottomAppBar);
         setSupportActionBar(mBottomAppBar);
 
-        mActionBar = getSupportActionBar();
+        ActionBar mActionBar = getSupportActionBar();
         if (mActionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -87,6 +89,9 @@ public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
             case R.id.fm_action_home:
                 gotoHomeDirectory();
                 return true;
+            case R.id.fm_action_gallery:
+                launchGallery();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -94,7 +99,7 @@ public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
 
     private void initFM() {
         mToolbarText = findViewById(R.id.fmToolbarText);
-        mRecyclerView = findViewById(R.id.fmRecyclerView);
+        RecyclerView mRecyclerView = findViewById(R.id.fmRecyclerView);
         mProgressBar = findViewById(R.id.fmProgressBar);
         mFileList = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -115,7 +120,7 @@ public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
         gotoHomeDirectory();
     }
 
-    public void refreshFileList() {
+    private void refreshFileList() {
         mRefreshTask = new RefreshTask(this);
         mRefreshTask.execute();
     }
@@ -124,8 +129,10 @@ public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
     public void gotoUpperDirectory() {
         String path;
         if (mCurrentDepth == 0) {
+            // Root
             return;
-        } else if (mCurrentDepth == 1) { // Right under root
+        } else if (mCurrentDepth == 1) {
+            // Right under root
             path = "/";
         } else {
             path = mCurrentPath.substring(0, mCurrentPath.lastIndexOf(File.separator));
@@ -157,6 +164,50 @@ public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
         mToolbarText.setText(path);
         mCurrentPath = path;
         refreshFileList();
+    }
+
+    @Override
+    public void customPictureSelected(Object obj) {
+        Intent intent = new Intent();
+        if (obj instanceof String) {
+            intent.putExtra("picture", (String) obj);
+        } else if (obj instanceof Uri) {
+            intent.putExtra("picture", (Uri) obj);
+        }
+        setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
+    /*
+    @Override
+    public void customPictureSelected(String path) {
+        Intent intent = new Intent();
+        intent.putExtra("path", path);
+        setResult(Activity.RESULT_OK, intent);
+        finish();
+    }*/
+
+    private void launchGallery() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
+                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        startActivityForResult(intent, REQ_CODE_ACTIVITY_DOCUMENTS_UI);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case REQ_CODE_ACTIVITY_DOCUMENTS_UI:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    Uri uri = data.getData();
+                    customPictureSelected(uri);
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     static class RefreshTask extends AsyncTask<Void, Void, Void> {

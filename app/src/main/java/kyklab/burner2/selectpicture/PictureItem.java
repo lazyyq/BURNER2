@@ -1,14 +1,14 @@
-package kyklab.burner2.settings.selectpicture;
+package kyklab.burner2.selectpicture;
 
 import androidx.annotation.Nullable;
 
-public class PictureItem {
+public class PictureItem<T> {
     private String name;
-    private int resId;
+    private T picture;
 
-    public PictureItem(String name, int resId) {
+    public PictureItem(String name, T picture) {
         this.name = name;
-        this.resId = resId;
+        this.picture = picture;
     }
 
     public String getName() {
@@ -19,12 +19,12 @@ public class PictureItem {
         this.name = name;
     }
 
-    public int getResId() {
-        return resId;
+    public T getPicture() {
+        return picture;
     }
 
-    public void setResId(int resId) {
-        this.resId = resId;
+    public void setPicture(T picture) {
+        this.picture = picture;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class PictureItem {
         if (obj instanceof PictureItem) {
             PictureItem target = (PictureItem) obj;
             return this.name.equals(target.name)
-                    && this.resId == target.resId;
+                    && this.picture == target.picture;
         } else {
             return false;
         }

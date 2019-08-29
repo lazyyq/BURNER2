@@ -1,4 +1,4 @@
-package kyklab.burner2.settings.selectpicture;
+package kyklab.burner2.selectpicture;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class PicturePreviewListAdapter extends RecyclerView.Adapter<PicturePrevi
     public PicturePreviewListAdapter(Context pContext, List<PictureItem> mThumbnailList) {
         this.pContext = pContext;
         this.mThumbnailList = mThumbnailList;
-        this.mCheckedPosition = PrefManager.getInstance().getSelectedPicture();
+        this.mCheckedPosition = PrefManager.getInstance().getSelectedPictureIndex();
     }
 
     @NonNull
@@ -39,7 +40,10 @@ public class PicturePreviewListAdapter extends RecyclerView.Adapter<PicturePrevi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PictureItem picture = mThumbnailList.get(position);
-        Glide.with(pContext).load(picture.getResId()).into(holder.picturePreview);
+        Glide.with(pContext).load(picture.getPicture())
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into(holder.picturePreview);
         if (mCheckedPosition == position) {
             holder.picturePreviewChecked.setVisibility(View.VISIBLE);
         } else {
@@ -74,7 +78,7 @@ public class PicturePreviewListAdapter extends RecyclerView.Adapter<PicturePrevi
         private final ImageView picturePreviewChecked;
         private final TextView pictureText;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             picturePreview = itemView.findViewById(R.id.picturePreview);
             picturePreviewChecked = itemView.findViewById(R.id.picturePreviewChecked);
@@ -83,7 +87,7 @@ public class PicturePreviewListAdapter extends RecyclerView.Adapter<PicturePrevi
             picturePreview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    PrefManager.getInstance().setSelectedPicture(getAdapterPosition());
+                    PrefManager.getInstance().setSelectedPictureIndex(getAdapterPosition());
                     PrefManager.getInstance().setUseCustomPicture(false);
                     PicturePreviewListAdapter.this.notifyItemChanged(mCheckedPosition, false);
                     PicturePreviewListAdapter.this.notifyItemChanged(getAdapterPosition(), true);
