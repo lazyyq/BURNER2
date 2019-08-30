@@ -165,48 +165,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-/*
-
-    private void setupFab() {
-        mFab = findViewById(R.id.mFab);
-        mFab.setOnClickListener(this);
-
-        fabBackground = findViewById(R.id.fabBackground);
-        fabBackground.setOnClickListener(this);
-
-        View[] miniFabItems = new View[]{findViewById(R.id.miniFabItem1),
-                findViewById(R.id.miniFabItem2), findViewById(R.id.miniFabItem3)};
-
-        miniFabs = new View[miniFabItems.length];
-        for (int i = 0, len = miniFabs.length; i < len; ++i) {
-            miniFabs[i] = miniFabItems[i].findViewById(R.id.miniFab);
-        }
-
-        miniFabTexts = new View[miniFabItems.length];
-        for (int i = 0, len = miniFabTexts.length; i < len; ++i) {
-            miniFabTexts[i] = miniFabItems[i].findViewById(R.id.miniFabTextCard);
-        }
-
-        for (View v : miniFabItems) {
-            v.findViewById(R.id.miniFab).setOnClickListener(this);
-        }
-
-        final View miniFabContainer = findViewById(R.id.miniFabContainer);
-
-        final float fabSizeNormal = getResources().getDimension(R.dimen.fab_size_normal);
-        miniFabTransitionDistance = getResources().getDimension(R.dimen.mini_fab_transition_distance);
-
-        final View temp = miniFabs[0];
-        temp.post(new Runnable() {
-            @Override
-            public void run() {
-                final int miniFabSize = temp.getMeasuredHeight();
-                miniFabContainer.setPadding(0, 0,
-                        (int) (fabSizeNormal - miniFabSize) / 2, 0);
-            }
-        });
-    }
-*/
 
     private void toggleFullscreen() {
         if (!mFullscreen) {
@@ -218,7 +176,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void hideUi() {
         ScreenUtils.hideSystemUi(this);
-        //collapseFab();
         mFab.hide();
 
         mFullscreen = true;
@@ -230,24 +187,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mFullscreen = false;
     }
-
-    /*private void collapseFab() {
-        fabBackground.setVisibility(View.GONE);
-        ViewUtils.animateHideInOrder(
-                miniFabs, 0, miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
-        ViewUtils.animateHideInOrder(
-                miniFabTexts, 0, miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
-        mFab.setExpanded(false);
-    }*/
-
-    /*private void expandFab() {
-        fabBackground.setVisibility(View.VISIBLE);
-        ViewUtils.animateShowInOrder(
-                miniFabs, 0, -miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
-        ViewUtils.animateShowInOrder(
-                miniFabTexts, 0, -miniFabTransitionDistance, MINI_FAB_ANIM_LENGTH, MINI_FAB_ANIM_DELAY);
-        mFab.setExpanded(true);
-    }*/
 
     private void delayedHideUi(int delay) {
         mHandler.removeCallbacks(mHideUiRunnable);
