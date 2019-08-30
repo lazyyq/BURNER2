@@ -1,6 +1,7 @@
 package kyklab.burner2.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -25,7 +26,8 @@ import kyklab.burner2.settings.SettingsActivity;
 import kyklab.burner2.utils.PrefManager;
 import kyklab.burner2.utils.ScreenUtils;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
     private static final int HIDE_UI_DELAY = 3000;
     private final Handler mHandler = new Handler();
     private RotateLayout mRotateLayout;
@@ -35,10 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final Runnable mHideUiRunnable = new Runnable() {
         @Override
         public void run() {
-            hideUi();
-            if (PrefManager.getInstance().getMaxBrightness()) {
-                ScreenUtils.setMaxBrightness(MainActivity.this);
-            }
+            setFullscreen(true);
         }
     };
     private BatteryLimiter batteryLimiter;
@@ -59,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         App.updatePictureList();
 
         batteryLimiter = new BatteryLimiter(this, findViewById(R.id.coordinatorLayout));
+
+        PrefManager.registerPrefChangeListener(this);
     }
 
     @Override
@@ -100,10 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.mainImage:
                 toggleFullscreen();
-                if (mFullscreen) {
-                    ScreenUtils.setMaxBrightness(this);
-                } else {
-                    ScreenUtils.resetBrightness(this);
+                if (!mFullscreen) {
                     delayedHideUi(HIDE_UI_DELAY);
                 }
                 break;
@@ -166,11 +164,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    private void setFullscreen(boolean b) {
+        mFullscreen = !b;
+        toggleFullscreen();
+    }
+
     private void toggleFullscreen() {
         if (!mFullscreen) {
             hideUi();
+            if (PrefManager.getInstance().getMaxBrightness()) {
+                ScreenUtils.setMaxBrightness(this);
+            }
         } else {
             showUi();
+            ScreenUtils.resetBrightness(this);
         }
     }
 
@@ -191,5 +198,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void delayedHideUi(int delay) {
         mHandler.removeCallbacks(mHideUiRunnable);
         mHandler.postDelayed(mHideUiRunnable, delay);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        switch (s) {
+            case PrefManager.KEY_MAX_BRIGHTNESS:
+                if (mFullscreen) {
+                    if (PrefManager.getInstance().getMaxBrightness()) {
+                        ScreenUtils.setMaxBrightness(this);
+                    } else {
+                        ScreenUtils.resetBrightness(this);
+                    }
+                }
+                break;
+        }
     }
 }
