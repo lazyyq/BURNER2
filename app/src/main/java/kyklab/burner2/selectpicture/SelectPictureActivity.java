@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -107,7 +108,13 @@ public class SelectPictureActivity extends AppCompatActivity implements SharedPr
     }
 
     private void setCustomPicture(Object pic) {
-        FMUtils.copy(this, pic, App.getCustomPicturePath());
+        try {
+            FMUtils.copy(this, pic, App.getCustomPicturePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error while setting picture", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         PrefManager.getInstance().setPicLastUpdatedTime(System.currentTimeMillis());
         // Always trigger onSharedPreferenceChangeListener

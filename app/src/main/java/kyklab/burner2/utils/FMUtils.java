@@ -13,7 +13,7 @@ import java.io.OutputStream;
 public class FMUtils {
     private static final String TAG = "FMUtils";
 
-    public static void copy(Context context, Object src, Object dst) {
+    public static void copy(Context context, Object src, Object dst) throws Exception {
         InputStream is = null;
         OutputStream os = null;
         try {
@@ -26,7 +26,7 @@ public class FMUtils {
             }
             if (is == null) {
                 Log.e(TAG, "InputStream is null");
-                return;
+                throw new Exception();
             }
 
             if (dst instanceof Uri) {
@@ -38,7 +38,7 @@ public class FMUtils {
             }
             if (os == null) {
                 Log.e(TAG, "OutputStream is null");
-                return;
+                throw new Exception();
             }
 
             byte[] buf = new byte[1024];
@@ -46,8 +46,9 @@ public class FMUtils {
             while ((len = is.read(buf)) > 0) {
                 os.write(buf, 0, len);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Error while copying picture");
+            throw new Exception();
         } finally {
             try {
                 if (is != null) {
