@@ -100,6 +100,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onDestroy() {
+        PrefManager.unregisterPrefChangeListener(this);
+
+        super.onDestroy();
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.mainImage:
