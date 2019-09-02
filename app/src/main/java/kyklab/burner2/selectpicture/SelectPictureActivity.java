@@ -3,6 +3,7 @@ package kyklab.burner2.selectpicture;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ import kyklab.burner2.fm.FMActivity;
 import kyklab.burner2.utils.FMUtils;
 import kyklab.burner2.utils.PrefManager;
 
-public class SelectPictureActivity extends AppCompatActivity {
+public class SelectPictureActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "SelectPictureActivity";
     private static final int PICTURE_LIST_SPAN_COUNT = 2;
     private static final int REQ_CODE_PERM = 100;
@@ -36,6 +37,7 @@ public class SelectPictureActivity extends AppCompatActivity {
     private List<PictureItem> mThumbnailList;
     private RecyclerView mRecyclerView;
     private PicturePreviewListAdapter mAdapter;
+    private boolean mNeedsRefresh = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class SelectPictureActivity extends AppCompatActivity {
         mAdapter = new PicturePreviewListAdapter(this, mThumbnailList);
         int margin = getResources().getDimensionPixelSize(R.dimen.picture_list_margin);
         mRecyclerView.addItemDecoration(new GridLayoutItemDecoration(margin));
+        updateThumbnailList();
 
         FloatingActionButton mFab = findViewById(R.id.fab_search);
         mFab.setOnClickListener(new View.OnClickListener() {
@@ -63,19 +66,24 @@ public class SelectPictureActivity extends AppCompatActivity {
                 }
             }
         });
+
+        PrefManager.registerPrefChangeListener(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        updateThumbnailList();
+        if (mNeedsRefresh) {
+            updateThumbnailList();
+            mNeedsRefresh = false;
+        }
     }
 
     private void updateThumbnailList() {
         mThumbnailList.clear();
         if (App.customPictureExists()) {
-            mThumbnailList.add(new PictureItem<>("User picture", App.getCustomPicturePath()));
+            mThumbnailList.add(App.getPictureList().get(0));
         }
         mThumbnailList.addAll(Arrays.asList(
                 new PictureItem<>("Picture 1", R.drawable.pic1_thumbnail),
@@ -101,6 +109,8 @@ public class SelectPictureActivity extends AppCompatActivity {
     private void setCustomPicture(Object pic) {
         FMUtils.copy(this, pic, App.getCustomPicturePath());
 
+        // Always trigger onSharedPreferenceChangeListener
+        PrefManager.getInstance().setSelectedPictureIndex(-1);
         PrefManager.getInstance().setSelectedPictureIndex(0);
 
         App.updatePictureList();
@@ -136,6 +146,15 @@ public class SelectPictureActivity extends AppCompatActivity {
                 break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        switch (s) {
+            case PrefManager.KEY_SELECTED_PICTURE_INDEX:
+                mNeedsRefresh = true;
+                break;
         }
     }
 

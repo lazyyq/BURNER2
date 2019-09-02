@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.util.List;
 
@@ -39,17 +39,19 @@ public class PicturePreviewListAdapter extends RecyclerView.Adapter<PicturePrevi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        PictureItem picture = mThumbnailList.get(position);
-        Glide.with(pContext).load(picture.getPicture())
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+        PictureItem pictureItem = mThumbnailList.get(position);
+        Object picture = pictureItem.getPicture();
+        ObjectKey key = new ObjectKey(pictureItem.getMetadata() != null ? pictureItem.getMetadata() : picture);
+        Glide.with(pContext)
+                .load(picture)
+                .signature(key)
                 .into(holder.picturePreview);
         if (mCheckedPosition == position) {
             holder.picturePreviewChecked.setVisibility(View.VISIBLE);
         } else {
             holder.picturePreviewChecked.setVisibility(View.GONE);
         }
-        holder.pictureText.setText(picture.getName());
+        holder.pictureText.setText(pictureItem.getName());
     }
 
     @Override

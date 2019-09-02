@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.util.List;
 
@@ -21,6 +21,7 @@ import kyklab.burner2.utils.PrefManager;
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private List<PictureItem> mPictureList;
     private ImageView toolbarBackground;
+    private boolean mNeedsRefresh = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 
         mPictureList = App.getPictureList();
         toolbarBackground = findViewById(R.id.settings_toolbar_background_image);
+        loadPicture();
 
         PrefManager.registerPrefChangeListener(this);
     }
@@ -39,7 +41,10 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     protected void onResume() {
         super.onResume();
 
-        loadPicture();
+        if (mNeedsRefresh) {
+            loadPicture();
+            mNeedsRefresh = false;
+        }
     }
 
     @Override
@@ -49,10 +54,13 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     }
 
     private void loadPicture() {
-        Object picture = mPictureList.get(PrefManager.getInstance().getSelectedPictureIndex()).getPicture();
-        Glide.with(this).load(picture).centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+        PictureItem pictureItem = mPictureList.get(PrefManager.getInstance().getSelectedPictureIndex());
+        Object picture = pictureItem.getPicture();
+        ObjectKey key = new ObjectKey(pictureItem.getMetadata() != null ? pictureItem.getMetadata() : picture);
+        Glide.with(this)
+                .load(picture)
+                .centerCrop()
+                .signature(key)
                 .into(toolbarBackground);
     }
 
@@ -60,7 +68,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         switch (s) {
             case PrefManager.KEY_SELECTED_PICTURE_INDEX:
-                loadPicture();
+                mNeedsRefresh = true;
                 break;
         }
     }

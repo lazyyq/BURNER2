@@ -40,7 +40,7 @@ public class App extends Application {
         if (customPictureExists()) {
             // Custom picture exists, add to list
             Log.e(TAG, "exists");
-            pictureList.add(new PictureItem<>("User picture", customPicturePath));
+            pictureList.add(new PictureItem<>("User picture", customPicturePath, System.currentTimeMillis()));
         }
         pictureList.addAll(Arrays.asList(
                 new PictureItem<>("Picture 1", R.drawable.pic1),

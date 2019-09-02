@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView mImageView;
     private SpeedDialView mFab;
     private boolean mFullscreen = false;
+    private boolean mNeedsRefresh = false;
     private final Runnable mHideUiRunnable = new Runnable() {
         @Override
         public void run() {
@@ -60,11 +61,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mImageView = findViewById(R.id.mainImage);
         mImageView.setOnClickListener(this);
         mRotateLayout = findViewById(R.id.rotateLayout);
-
         mPictureList = App.getPictureList();
-        setupFab();
         App.updatePictureList();
+        loadPicture();
 
+        setupFab();
         batteryLimiter = new BatteryLimiter(this, findViewById(R.id.coordinatorLayout));
 
         PrefManager.registerPrefChangeListener(this);
@@ -74,7 +75,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
 
-        loadPicture();
+        if (mNeedsRefresh) {
+            loadPicture();
+            mNeedsRefresh = false;
+        }
 
         if (!mFullscreen) {
             delayedHideUi();
@@ -123,10 +127,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void loadPicture() {
         int rotateAngle = Integer.parseInt(PrefManager.getInstance().getRotateAngle());
         mRotateLayout.setAngle(rotateAngle);
+        PictureItem pictureItem = mPictureList.get(PrefManager.getInstance().getSelectedPictureIndex());
+        Object picture = pictureItem.getPicture();
+        ObjectKey key = new ObjectKey(pictureItem.getMetadata() != null ? pictureItem.getMetadata() : picture);
         Glide.with(this)
-                .load(mPictureList.get(PrefManager.getInstance().getSelectedPictureIndex()).getPicture())
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+                .load(picture)
+                .signature(key)
                 .into(mImageView);
     }
 
@@ -235,6 +241,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         ScreenUtils.resetBrightness(this);
                     }
                 }
+                break;
+            case PrefManager.KEY_SELECTED_PICTURE_INDEX:
+            case PrefManager.KEY_ROTATE_ANGLE:
+                mNeedsRefresh = true;
                 break;
         }
     }

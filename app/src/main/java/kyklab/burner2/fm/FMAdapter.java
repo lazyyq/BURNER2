@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.File;
 import java.util.List;
@@ -45,8 +44,6 @@ public class FMAdapter extends RecyclerView.Adapter<FMAdapter.ViewHolder> {
             holder.fileIconView.setImageResource(R.drawable.ic_folder_36dp);
         } else {
             Glide.with(pContext).load(file).centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
                     .into(holder.fileIconView);
         }
         holder.fileNameView.setText(file.getName());
