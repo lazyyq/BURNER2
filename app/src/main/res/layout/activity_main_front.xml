@@ -18,8 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        app:sdMainFabAnimationRotateAngle="0"
-        app:sdMainFabClosedSrc="@drawable/ic_more_vert_white_24dp"
+        app:sdMainFabClosedSrc="@drawable/ic_add_24dp"
         app:sdOverlayLayout="@id/fabBlockLayout" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

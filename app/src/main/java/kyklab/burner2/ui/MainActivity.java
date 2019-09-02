@@ -2,6 +2,8 @@ package kyklab.burner2.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -138,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setupFab() {
         mFab = findViewById(R.id.fab);
-
+        mFab.getMainFab().setImageTintList(ColorStateList.valueOf(Color.WHITE));
         mFab.setOnChangeListener(new SpeedDialView.OnChangeListener() {
             @Override
             public boolean onMainActionSelected() {
