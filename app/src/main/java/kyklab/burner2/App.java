@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import kyklab.burner2.selectpicture.PictureItem;
+import kyklab.burner2.utils.PrefManager;
 
 public class App extends Application {
     private static final String TAG = "App";
@@ -40,7 +41,8 @@ public class App extends Application {
         if (customPictureExists()) {
             // Custom picture exists, add to list
             Log.e(TAG, "exists");
-            pictureList.add(new PictureItem<>("User picture", customPicturePath, System.currentTimeMillis()));
+            pictureList.add(new PictureItem<>("User picture", customPicturePath,
+                    PrefManager.getInstance().getPicLastUpdatedTime()));
         }
         pictureList.addAll(Arrays.asList(
                 new PictureItem<>("Picture 1", R.drawable.pic1),

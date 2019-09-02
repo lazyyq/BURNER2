@@ -109,6 +109,7 @@ public class SelectPictureActivity extends AppCompatActivity implements SharedPr
     private void setCustomPicture(Object pic) {
         FMUtils.copy(this, pic, App.getCustomPicturePath());
 
+        PrefManager.getInstance().setPicLastUpdatedTime(System.currentTimeMillis());
         // Always trigger onSharedPreferenceChangeListener
         PrefManager.getInstance().setSelectedPictureIndex(-1);
         PrefManager.getInstance().setSelectedPictureIndex(0);

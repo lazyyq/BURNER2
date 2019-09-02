@@ -15,6 +15,7 @@ public class PrefManager {
     public static final String KEY_BATTERY_LIMIT_ENABLED = "battery_limit_enabled";
     public static final String KEY_KEEP_SCREEN_ON = "keep_screen_on";
     public static final String KEY_MAX_BRIGHTNESS = "max_brightness";
+    public static final String KEY_PIC_LAST_UPDATED_TIME = "pic_last_updated_time";
     private static SharedPreferences pref;
     private static SharedPreferences.Editor editor;
 
@@ -87,6 +88,14 @@ public class PrefManager {
 
     public void setMaxBrightness(boolean b) {
         editor.putBoolean(KEY_MAX_BRIGHTNESS, b).apply();
+    }
+
+    public long getPicLastUpdatedTime() {
+        return pref.getLong(KEY_PIC_LAST_UPDATED_TIME, -1);
+    }
+
+    public void setPicLastUpdatedTime(long l) {
+        editor.putLong(KEY_PIC_LAST_UPDATED_TIME, l).apply();
     }
 
     private static class LazyHolder {
