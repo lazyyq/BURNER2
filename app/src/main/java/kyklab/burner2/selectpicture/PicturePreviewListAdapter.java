@@ -88,7 +88,6 @@ public class PicturePreviewListAdapter extends RecyclerView.Adapter<PicturePrevi
                 @Override
                 public void onClick(View view) {
                     PrefManager.getInstance().setSelectedPictureIndex(getAdapterPosition());
-                    PrefManager.getInstance().setUseCustomPicture(false);
                     PicturePreviewListAdapter.this.notifyItemChanged(mCheckedPosition, false);
                     PicturePreviewListAdapter.this.notifyItemChanged(getAdapterPosition(), true);
                     mCheckedPosition = getAdapterPosition();

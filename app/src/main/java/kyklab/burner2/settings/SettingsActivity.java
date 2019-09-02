@@ -59,7 +59,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         switch (s) {
-            case PrefManager.KEY_USE_CUSTOM_PICTURE:
             case PrefManager.KEY_SELECTED_PICTURE_INDEX:
                 loadPicture();
                 break;

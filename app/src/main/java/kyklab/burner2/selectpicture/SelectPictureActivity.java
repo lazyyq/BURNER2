@@ -101,7 +101,6 @@ public class SelectPictureActivity extends AppCompatActivity {
     private void setCustomPicture(Object pic) {
         FMUtils.copy(this, pic, App.getCustomPicturePath());
 
-        PrefManager.getInstance().setUseCustomPicture(true);
         PrefManager.getInstance().setSelectedPictureIndex(0);
 
         App.updatePictureList();

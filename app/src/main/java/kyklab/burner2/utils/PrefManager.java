@@ -10,7 +10,6 @@ import kyklab.burner2.App;
 public class PrefManager {
     public static final String KEY_SELECT_PICTURE = "select_picture";
     public static final String KEY_SELECTED_PICTURE_INDEX = "selected_picture_index";
-    public static final String KEY_USE_CUSTOM_PICTURE = "use_custom_picture";
     public static final String KEY_ROTATE_ANGLE = "rotation";
     public static final String KEY_BATTERY_LIMIT = "battery_limit";
     public static final String KEY_BATTERY_LIMIT_ENABLED = "battery_limit_enabled";
@@ -48,14 +47,6 @@ public class PrefManager {
 
     public void setSelectedPictureIndex(int i) {
         editor.putInt(KEY_SELECTED_PICTURE_INDEX, i).apply();
-    }
-
-    public boolean getUseCustomPicture() {
-        return pref.getBoolean(KEY_USE_CUSTOM_PICTURE, false);
-    }
-
-    public void setUseCustomPicture(boolean b) {
-        editor.putBoolean(KEY_USE_CUSTOM_PICTURE, b).apply();
     }
 
     public String getRotateAngle() {
