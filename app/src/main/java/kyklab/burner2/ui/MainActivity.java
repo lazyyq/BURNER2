@@ -37,7 +37,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final Runnable mHideUiRunnable = new Runnable() {
         @Override
         public void run() {
-            setFullscreen(true);
+            toggleFullscreen(true);
+        }
+    };
+    private final Runnable mMaxBrightnessRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (PrefManager.getInstance().getMaxBrightness()) {
+                ScreenUtils.setMaxBrightness(MainActivity.this);
+            }
         }
     };
     private BatteryLimiter batteryLimiter;
@@ -63,24 +71,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (!mFullscreen) {
-            delayedHideUi(HIDE_UI_DELAY);
-        }
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
 
         loadPicture();
 
+        if (!mFullscreen) {
+            delayedHideUi();
+            delayedMaxBrightness();
+        }
+
         if (PrefManager.getInstance().getKeepScreenOn()) {
             ScreenUtils.setKeepScreenOn(this);
-        } else {
-            ScreenUtils.unsetKeepScreenOn(this);
         }
 
         if (PrefManager.getInstance().getBatteryLimitEnabled()) {
@@ -93,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onPause();
 
         batteryLimiter.stop();
+        ScreenUtils.unsetKeepScreenOn(this);
         ScreenUtils.resetBrightness(this);
     }
 
@@ -101,8 +104,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.mainImage:
                 toggleFullscreen();
+                toggleBrightness();
                 if (!mFullscreen) {
-                    delayedHideUi(HIDE_UI_DELAY);
+                    delayedHideUi();
+                    delayedMaxBrightness();
                 }
                 break;
         }
@@ -130,7 +135,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onToggleChanged(boolean isOpen) {
                 // Reset hide delay on every click
-                delayedHideUi(HIDE_UI_DELAY);
+                delayedHideUi();
+                delayedMaxBrightness();
             }
         });
 
@@ -164,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void setFullscreen(boolean b) {
+    private void toggleFullscreen(boolean b) {
         mFullscreen = !b;
         toggleFullscreen();
     }
@@ -172,13 +178,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void toggleFullscreen() {
         if (!mFullscreen) {
             hideUi();
+        } else {
+            showUi();
+        }
+    }
+
+    private void toggleBrightness() {
+        if (mFullscreen) {
             if (PrefManager.getInstance().getMaxBrightness()) {
                 ScreenUtils.setMaxBrightness(this);
             }
         } else {
-            showUi();
             ScreenUtils.resetBrightness(this);
         }
+    }
+
+    private void delayedMaxBrightness() {
+        mHandler.removeCallbacks(mMaxBrightnessRunnable);
+        mHandler.postDelayed(mMaxBrightnessRunnable, HIDE_UI_DELAY);
     }
 
     private void hideUi() {
@@ -195,9 +212,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFullscreen = false;
     }
 
-    private void delayedHideUi(int delay) {
+    private void delayedHideUi() {
         mHandler.removeCallbacks(mHideUiRunnable);
-        mHandler.postDelayed(mHideUiRunnable, delay);
+        mHandler.postDelayed(mHideUiRunnable, HIDE_UI_DELAY);
     }
 
     @Override
