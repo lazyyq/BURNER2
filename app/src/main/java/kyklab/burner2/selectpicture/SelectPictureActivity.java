@@ -36,7 +36,6 @@ public class SelectPictureActivity extends AppCompatActivity implements SharedPr
     private static final int REQ_CODE_PERM = 100;
     private static final int REQ_CODE_ACTIVITY_FM = 100;
     private List<PictureItem> mThumbnailList;
-    private RecyclerView mRecyclerView;
     private PicturePreviewListAdapter mAdapter;
     private boolean mNeedsRefresh = false;
 
@@ -45,11 +44,7 @@ public class SelectPictureActivity extends AppCompatActivity implements SharedPr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_picture);
 
-        mThumbnailList = new ArrayList<>();
-        mRecyclerView = findViewById(R.id.picturesListView);
-        mAdapter = new PicturePreviewListAdapter(this, mThumbnailList);
-        int margin = getResources().getDimensionPixelSize(R.dimen.picture_list_margin);
-        mRecyclerView.addItemDecoration(new GridLayoutItemDecoration(margin));
+        setupRecyclerView();
         updateThumbnailList();
 
         FloatingActionButton mFab = findViewById(R.id.fab_search);
@@ -81,12 +76,26 @@ public class SelectPictureActivity extends AppCompatActivity implements SharedPr
         }
     }
 
+    private void setupRecyclerView() {
+        mThumbnailList = new ArrayList<>();
+        mAdapter = new PicturePreviewListAdapter(this, mThumbnailList);
+        RecyclerView mRecyclerView = findViewById(R.id.picturesListView);
+        mRecyclerView.setAdapter(mAdapter);
+        GridLayoutManager layoutManager = new GridLayoutManager(
+                this, PICTURE_LIST_SPAN_COUNT);
+        mRecyclerView.setLayoutManager(layoutManager);
+        int margin = getResources().getDimensionPixelSize(R.dimen.picture_list_margin);
+        GridLayoutItemDecoration decoration =
+                new GridLayoutItemDecoration(margin, margin, margin, margin * 4);
+        mRecyclerView.addItemDecoration(decoration);
+    }
+
     private void updateThumbnailList() {
-        mThumbnailList.clear();
+        List<PictureItem> tempList = new ArrayList<>();
         if (App.customPictureExists()) {
-            mThumbnailList.add(App.getPictureList().get(0));
+            tempList.add(App.getPictureList().get(0));
         }
-        mThumbnailList.addAll(Arrays.asList(
+        tempList.addAll(Arrays.asList(
                 new PictureItem<>("Picture 1", R.drawable.pic1_thumbnail),
                 new PictureItem<>("Picture 2", R.drawable.pic2_thumbnail),
                 new PictureItem<>("Picture 3", R.drawable.pic3_thumbnail),
@@ -94,12 +103,9 @@ public class SelectPictureActivity extends AppCompatActivity implements SharedPr
                 new PictureItem<>("Picture 5", R.drawable.pic5_thumbnail),
                 new PictureItem<>("Picture 6", R.drawable.pic6_thumbnail)
         ));
+        mThumbnailList.clear();
+        mThumbnailList.addAll(tempList);
         mAdapter.notifyDataSetChanged();
-
-        GridLayoutManager mLayoutManager = new GridLayoutManager(this, mThumbnailList.size());
-        mLayoutManager.setSpanCount(PICTURE_LIST_SPAN_COUNT);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
     }
 
     private void launchFM() {
@@ -167,19 +173,25 @@ public class SelectPictureActivity extends AppCompatActivity implements SharedPr
     }
 
     class GridLayoutItemDecoration extends RecyclerView.ItemDecoration {
-        private final int margin;
+        private final int leftMargin;
+        private final int topMargin;
+        private final int rightMargin;
+        private final int bottomMargin;
 
-        GridLayoutItemDecoration(int margin) {
-            this.margin = margin;
+        GridLayoutItemDecoration(int leftMargin, int topMargin, int rightMargin, int bottomMargin) {
+            this.leftMargin = leftMargin;
+            this.topMargin = topMargin;
+            this.rightMargin = rightMargin;
+            this.bottomMargin = bottomMargin;
         }
 
         @Override
         public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
                                    @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-            outRect.left = margin;
-            outRect.right = margin;
-            outRect.bottom = margin;
-            outRect.top = margin;
+            outRect.left = leftMargin;
+            outRect.right = rightMargin;
+            outRect.bottom = bottomMargin;
+            outRect.top = topMargin;
         }
     }
 }
