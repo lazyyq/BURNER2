@@ -98,6 +98,10 @@ public class PrefManager {
         editor.putLong(KEY_PIC_LAST_UPDATED_TIME, l).apply();
     }
 
+    public void removePref(String pref) {
+        editor.remove(pref).apply();
+    }
+
     private static class LazyHolder {
         static final PrefManager INSTANCE = new PrefManager();
     }

@@ -124,7 +124,7 @@ public class SelectPictureActivity extends AppCompatActivity implements SharedPr
 
         PrefManager.getInstance().setPicLastUpdatedTime(System.currentTimeMillis());
         // Always trigger onSharedPreferenceChangeListener
-        PrefManager.getInstance().setSelectedPictureIndex(-1);
+        PrefManager.getInstance().removePref(PrefManager.KEY_SELECTED_PICTURE_INDEX);
         PrefManager.getInstance().setSelectedPictureIndex(0);
 
         App.updatePictureList();
