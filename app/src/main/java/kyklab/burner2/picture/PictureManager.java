@@ -1,8 +1,10 @@
 package kyklab.burner2.picture;
 
+import android.net.Uri;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +27,7 @@ public class PictureManager {
                     new PictureItem<>("Picture 5", R.drawable.pic5, R.drawable.pic5_thumbnail, null),
                     new PictureItem<>("Picture 6", R.drawable.pic6, R.drawable.pic6_thumbnail, null));
     private static List<PictureItem> pictures;
+    private final String TAG = "PictureManager";
 
     private PictureManager() {
         pictures = new ArrayList<>();
@@ -56,10 +59,17 @@ public class PictureManager {
 
     public void setAsCustomPicture(Object picture) {
         try {
-            FMUtils.copy(App.getContext(), picture, CUSTOM_PICTURE_PATH);
-        } catch (Exception e) {
+            if (picture instanceof String) {
+                FMUtils.copy((String) picture, CUSTOM_PICTURE_PATH);
+            } else if (picture instanceof Uri) {
+                FMUtils.copy(App.getContext(), (Uri) picture, CUSTOM_PICTURE_PATH);
+            } else {
+                Toast.makeText(App.getContext(), "Unsupported picture parameter type", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(App.getContext(), "Error while setting picture", Toast.LENGTH_SHORT).show();
+            Toast.makeText(App.getContext(), "IO error while setting picture", Toast.LENGTH_SHORT).show();
             return;
         }
 
