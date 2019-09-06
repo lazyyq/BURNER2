@@ -70,7 +70,7 @@ public class FMAdapter extends RecyclerView.Adapter<FMAdapter.ViewHolder> {
                     if (file.isDirectory()) {
                         mCallback.enterDirectory(file.getName());
                     } else {
-                        mCallback.customPictureSelected(file.getAbsolutePath());
+                        mCallback.selectAsCustomPicture(file.getAbsolutePath());
                     }
                 }
             });

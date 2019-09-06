@@ -16,16 +16,17 @@ import com.bumptech.glide.signature.ObjectKey;
 import java.util.List;
 
 import kyklab.burner2.R;
+import kyklab.burner2.picture.PictureItem;
 import kyklab.burner2.utils.PrefManager;
 
 public class PicturePreviewListAdapter extends RecyclerView.Adapter<PicturePreviewListAdapter.ViewHolder> {
     private final Context pContext;
-    private final List<PictureItem> mThumbnailList;
+    private final List<PictureItem> mPictureList;
     private int mCheckedPosition;
 
-    public PicturePreviewListAdapter(Context pContext, List<PictureItem> mThumbnailList) {
+    public PicturePreviewListAdapter(Context pContext, List<PictureItem> mPictureList) {
         this.pContext = pContext;
-        this.mThumbnailList = mThumbnailList;
+        this.mPictureList = mPictureList;
         this.mCheckedPosition = PrefManager.getInstance().getSelectedPictureIndex();
     }
 
@@ -39,11 +40,13 @@ public class PicturePreviewListAdapter extends RecyclerView.Adapter<PicturePrevi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        PictureItem pictureItem = mThumbnailList.get(position);
-        Object picture = pictureItem.getPicture();
-        ObjectKey key = new ObjectKey(pictureItem.getMetadata() != null ? pictureItem.getMetadata() : picture);
+        PictureItem pictureItem = mPictureList.get(position);
+        Object thumbnail = pictureItem.getThumbnail() != null
+                ? pictureItem.getThumbnail() : pictureItem.getPicture();
+        ObjectKey key = new ObjectKey(pictureItem.getMetadata() != null
+                ? pictureItem.getMetadata() : thumbnail);
         Glide.with(pContext)
-                .load(picture)
+                .load(thumbnail)
                 .signature(key)
                 .into(holder.picturePreview);
         if (mCheckedPosition == position) {
@@ -72,7 +75,7 @@ public class PicturePreviewListAdapter extends RecyclerView.Adapter<PicturePrevi
 
     @Override
     public int getItemCount() {
-        return mThumbnailList.size();
+        return mPictureList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

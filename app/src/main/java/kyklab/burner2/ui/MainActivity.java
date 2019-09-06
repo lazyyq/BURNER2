@@ -18,12 +18,10 @@ import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
-import java.util.List;
-
-import kyklab.burner2.App;
 import kyklab.burner2.R;
 import kyklab.burner2.batterylimit.BatteryLimiter;
-import kyklab.burner2.selectpicture.PictureItem;
+import kyklab.burner2.picture.PictureItem;
+import kyklab.burner2.picture.PictureManager;
 import kyklab.burner2.settings.SettingsActivity;
 import kyklab.burner2.utils.PrefManager;
 import kyklab.burner2.utils.ScreenUtils;
@@ -53,8 +51,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     };
     private BatteryLimiter batteryLimiter;
 
-    private List<PictureItem> mPictureList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,13 +59,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mImageView = findViewById(R.id.mainImage);
         mImageView.setOnClickListener(this);
         mRotateLayout = findViewById(R.id.rotateLayout);
-        mPictureList = App.getPictureList();
-        App.updatePictureList();
+        setupFab();
+        PictureManager.getInstance().updatePictureList();
         loadPicture();
 
-        setupFab();
         batteryLimiter = new BatteryLimiter(this, findViewById(R.id.coordinatorLayout));
-
         PrefManager.registerPrefChangeListener(this);
     }
 
@@ -129,9 +123,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void loadPicture() {
         int rotateAngle = Integer.parseInt(PrefManager.getInstance().getRotateAngle());
         mRotateLayout.setAngle(rotateAngle);
-        PictureItem pictureItem = mPictureList.get(PrefManager.getInstance().getSelectedPictureIndex());
+        PictureItem pictureItem = PictureManager.getInstance().getPictureList()
+                .get(PrefManager.getInstance().getSelectedPictureIndex());
         Object picture = pictureItem.getPicture();
-        ObjectKey key = new ObjectKey(pictureItem.getMetadata() != null ? pictureItem.getMetadata() : picture);
+        ObjectKey key = new ObjectKey(pictureItem.getMetadata() != null
+                ? pictureItem.getMetadata() : picture);
         Glide.with(this)
                 .load(picture)
                 .signature(key)

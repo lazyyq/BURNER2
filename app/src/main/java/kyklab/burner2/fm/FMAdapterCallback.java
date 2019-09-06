@@ -5,5 +5,5 @@ interface FMAdapterCallback {
 
     void enterDirectory(String dir);
 
-    void customPictureSelected(Object obj);
+    void selectAsCustomPicture(Object obj);
 }

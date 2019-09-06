@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import kyklab.burner2.R;
+import kyklab.burner2.picture.PictureManager;
 
 public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
     private static final int REQ_CODE_ACTIVITY_DOCUMENTS_UI = 100;
@@ -167,25 +168,10 @@ public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
     }
 
     @Override
-    public void customPictureSelected(Object obj) {
-        Intent intent = new Intent();
-        if (obj instanceof String) {
-            intent.putExtra("picture", (String) obj);
-        } else if (obj instanceof Uri) {
-            intent.putExtra("picture", (Uri) obj);
-        }
-        setResult(Activity.RESULT_OK, intent);
+    public void selectAsCustomPicture(Object obj) {
+        PictureManager.getInstance().setAsCustomPicture(obj);
         finish();
     }
-
-    /*
-    @Override
-    public void customPictureSelected(String path) {
-        Intent intent = new Intent();
-        intent.putExtra("path", path);
-        setResult(Activity.RESULT_OK, intent);
-        finish();
-    }*/
 
     private void launchGallery() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -202,7 +188,7 @@ public class FMActivity extends AppCompatActivity implements FMAdapterCallback {
             case REQ_CODE_ACTIVITY_DOCUMENTS_UI:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     Uri uri = data.getData();
-                    customPictureSelected(uri);
+                    selectAsCustomPicture(uri);
                 }
                 break;
             default:
