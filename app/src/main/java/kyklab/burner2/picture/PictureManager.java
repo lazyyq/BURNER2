@@ -20,12 +20,12 @@ public class PictureManager {
             App.getContext().getFilesDir().getPath() + File.separator + CUSTOM_PICTURE_FILENAME;
     private static final List<PictureItem> builtInPictures =
             Arrays.<PictureItem>asList(
-                    new PictureItem<>("Picture 1", R.drawable.pic1, R.drawable.pic1_thumbnail, null),
-                    new PictureItem<>("Picture 2", R.drawable.pic2, R.drawable.pic2_thumbnail, null),
-                    new PictureItem<>("Picture 3", R.drawable.pic3, R.drawable.pic3_thumbnail, null),
-                    new PictureItem<>("Picture 4", R.drawable.pic4, R.drawable.pic4_thumbnail, null),
-                    new PictureItem<>("Picture 5", R.drawable.pic5, R.drawable.pic5_thumbnail, null),
-                    new PictureItem<>("Picture 6", R.drawable.pic6, R.drawable.pic6_thumbnail, null));
+                    new PictureItem<>(R.string.picture_1, R.drawable.pic_1, R.drawable.pic_1_thumbnail, null),
+                    new PictureItem<>(R.string.picture_2, R.drawable.pic_2, R.drawable.pic_2_thumbnail, null),
+                    new PictureItem<>(R.string.picture_3, R.drawable.pic_3, R.drawable.pic_3_thumbnail, null),
+                    new PictureItem<>(R.string.picture_4, R.drawable.pic_4, R.drawable.pic_4_thumbnail, null),
+                    new PictureItem<>(R.string.picture_5, R.drawable.pic_5, R.drawable.pic_5_thumbnail, null),
+                    new PictureItem<>(R.string.picture_6, R.drawable.pic_6, R.drawable.pic_6_thumbnail, null));
     private static List<PictureItem> pictures;
     private final String TAG = "PictureManager";
 
@@ -48,7 +48,7 @@ public class PictureManager {
     public void updatePictureList() {
         List<PictureItem> temp = new ArrayList<>();
         if (customPictureExists()) {
-            temp.add(new PictureItem<>("User picture", CUSTOM_PICTURE_PATH, null,
+            temp.add(new PictureItem<>(R.string.picture_custom, CUSTOM_PICTURE_PATH, null,
                     PrefManager.getInstance().getPicLastUpdatedTime()));
         }
         temp.addAll(builtInPictures);
