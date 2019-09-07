@@ -7,9 +7,10 @@
         <item name="android:statusBarColor">?colorPrimary</item>
         <item name="android:navigationBarColor">?colorPrimary</item>
         <item name="android:navigationBarDividerColor">?colorControlHighlight</item>
+        <item name="floatingActionButtonStyle">@style/AppTheme.FloatingActionButton</item>
+        <item name="bottomAppBarStyle">@style/AppTheme.BottomAppBar</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
-        <item name="floatingActionButtonStyle">@style/AppTheme.FloatingActionButton</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -31,11 +32,6 @@
     <style name="AppTheme.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="backgroundTint">@color/colorAccent</item>
         <item name="tint">@android:color/white</item>
-    </style>
-
-    <style name="AppTheme.FloatingActionButton.Mini">
-        <item name="backgroundTint">@android:color/holo_blue_light</item>
-        <item name="tint">@android:color/black</item>
     </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.MaterialComponents.Headline6">

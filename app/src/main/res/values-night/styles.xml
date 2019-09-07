@@ -8,6 +8,8 @@
         <item name="android:statusBarColor">?colorPrimary</item>
         <item name="android:navigationBarColor">?colorPrimary</item>
         <item name="android:navigationBarDividerColor">?colorControlHighlight</item>
+        <item name="floatingActionButtonStyle">@style/AppTheme.FloatingActionButton</item>
+        <item name="bottomAppBarStyle">@style/AppTheme.BottomAppBar</item>
     </style>
 
 </resources>

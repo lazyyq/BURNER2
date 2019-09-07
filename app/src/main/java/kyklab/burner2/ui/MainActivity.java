@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new SpeedDialActionItem
                         .Builder(R.id.fab_settings, AppCompatResources.getDrawable(this,
                         R.drawable.ic_settings_white_24dp))
+                        .setFabBackgroundColor(Color.WHITE)
                         .setFabImageTintColor(Color.BLACK)
                         .setLabel("Settings")
                         .create());
@@ -168,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new SpeedDialActionItem
                         .Builder(R.id.fab_temp, AppCompatResources.getDrawable(this,
                         R.drawable.ic_settings_white_24dp))
+                        .setFabBackgroundColor(Color.WHITE)
                         .setFabImageTintColor(Color.BLACK)
                         .setLabel("temp")
                         .create());
