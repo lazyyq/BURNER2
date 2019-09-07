@@ -28,14 +28,14 @@ public class PictureManager {
                     new PictureItem<>(R.string.picture_4, R.drawable.pic_4, R.drawable.pic_4_thumbnail, null),
                     new PictureItem<>(R.string.picture_5, R.drawable.pic_5, R.drawable.pic_5_thumbnail, null),
                     new PictureItem<>(R.string.picture_6, R.drawable.pic_6, R.drawable.pic_6_thumbnail, null));
-    private static List<PictureItem> pictures;
-    private final String TAG = "PictureManager";
     private static final Runnable clearDiskCacheRunnable = new Runnable() {
         @Override
         public void run() {
             Glide.get(App.getContext()).clearDiskCache();
         }
     };
+    private static List<PictureItem> pictures;
+    private final String TAG = "PictureManager";
 
     private PictureManager() {
         pictures = new ArrayList<>();
@@ -43,6 +43,21 @@ public class PictureManager {
 
     public static PictureManager getInstance() {
         return LazyHolder.INSTANCE;
+    }
+
+    public static void forceImageReload() {
+        int curIndex = PrefManager.getInstance().getSelectedPictureIndex();
+        forceImageReload(curIndex);
+    }
+
+    public static void forceImageReload(int pictureIndex) {
+        PrefManager.getInstance().removePref(PrefManager.KEY_SELECTED_PICTURE_INDEX);
+        PrefManager.getInstance().setSelectedPictureIndex(pictureIndex);
+    }
+
+    public static void clearImageCache() {
+        Glide.get(App.getContext()).clearMemory();
+        new Thread(clearDiskCacheRunnable).start();
     }
 
     public boolean customPictureExists() {
@@ -63,21 +78,6 @@ public class PictureManager {
 
         pictures.clear();
         pictures.addAll(temp);
-    }
-
-    public static void forceImageReload() {
-        int curIndex = PrefManager.getInstance().getSelectedPictureIndex();
-        forceImageReload(curIndex);
-    }
-
-    public static void forceImageReload(int pictureIndex) {
-        PrefManager.getInstance().removePref(PrefManager.KEY_SELECTED_PICTURE_INDEX);
-        PrefManager.getInstance().setSelectedPictureIndex(pictureIndex);
-    }
-
-    public static void clearImageCache() {
-        Glide.get(App.getContext()).clearMemory();
-        new Thread(clearDiskCacheRunnable).start();
     }
 
     public void setAsCustomPicture(Object picture) {

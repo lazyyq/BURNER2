@@ -31,17 +31,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences.OnSharedPreferenceChangeListener {
     private static final int HIDE_UI_DELAY = 3000;
     private final Handler mHandler = new Handler();
-    private RotateLayout mRotateLayout;
-    private ImageView mImageView;
-    private SpeedDialView mFab;
-    private boolean mFullscreen = false;
-    private boolean mNeedsRefresh = false;
-    private final Runnable mHideUiRunnable = new Runnable() {
-        @Override
-        public void run() {
-            toggleFullscreen(true);
-        }
-    };
     private final Runnable mMaxBrightnessRunnable = new Runnable() {
         @Override
         public void run() {
@@ -50,6 +39,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     };
+    private RotateLayout mRotateLayout;
+    private ImageView mImageView;
+    private SpeedDialView mFab;
+    private boolean mFullscreen = false;
+    private final Runnable mHideUiRunnable = new Runnable() {
+        @Override
+        public void run() {
+            toggleFullscreen(true);
+        }
+    };
+    private boolean mNeedsRefresh = false;
     private BatteryLimiter batteryLimiter;
 
     @Override
