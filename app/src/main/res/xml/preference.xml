@@ -61,4 +61,15 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="Application"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            android:key="clear_image_cache"
+            android:title="Clear image cache"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

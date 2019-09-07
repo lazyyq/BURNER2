@@ -3,6 +3,8 @@ package kyklab.burner2.picture;
 import android.net.Uri;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,6 +30,12 @@ public class PictureManager {
                     new PictureItem<>(R.string.picture_6, R.drawable.pic_6, R.drawable.pic_6_thumbnail, null));
     private static List<PictureItem> pictures;
     private final String TAG = "PictureManager";
+    private static final Runnable clearDiskCacheRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Glide.get(App.getContext()).clearDiskCache();
+        }
+    };
 
     private PictureManager() {
         pictures = new ArrayList<>();
@@ -57,6 +65,21 @@ public class PictureManager {
         pictures.addAll(temp);
     }
 
+    public static void forceImageReload() {
+        int curIndex = PrefManager.getInstance().getSelectedPictureIndex();
+        forceImageReload(curIndex);
+    }
+
+    public static void forceImageReload(int pictureIndex) {
+        PrefManager.getInstance().removePref(PrefManager.KEY_SELECTED_PICTURE_INDEX);
+        PrefManager.getInstance().setSelectedPictureIndex(pictureIndex);
+    }
+
+    public static void clearImageCache() {
+        Glide.get(App.getContext()).clearMemory();
+        new Thread(clearDiskCacheRunnable).start();
+    }
+
     public void setAsCustomPicture(Object picture) {
         try {
             if (picture instanceof String) {
@@ -73,9 +96,8 @@ public class PictureManager {
             return;
         }
 
-        PrefManager.getInstance().removePref(PrefManager.KEY_SELECTED_PICTURE_INDEX);
         PrefManager.getInstance().setPicLastUpdatedTime(System.currentTimeMillis());
-        PrefManager.getInstance().setSelectedPictureIndex(0);
+        forceImageReload(0);
 
         updatePictureList();
     }

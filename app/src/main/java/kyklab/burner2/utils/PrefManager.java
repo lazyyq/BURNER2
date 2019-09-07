@@ -16,6 +16,7 @@ public class PrefManager {
     public static final String KEY_KEEP_SCREEN_ON = "keep_screen_on";
     public static final String KEY_MAX_BRIGHTNESS = "max_brightness";
     public static final String KEY_PIC_LAST_UPDATED_TIME = "pic_last_updated_time";
+    public static final String KEY_CLEAR_IMAGE_CACHE = "clear_image_cache";
     private static SharedPreferences pref;
     private static SharedPreferences.Editor editor;
 

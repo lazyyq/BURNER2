@@ -8,12 +8,14 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import kyklab.burner2.R;
+import kyklab.burner2.picture.PictureManager;
 import kyklab.burner2.selectpicture.SelectPictureActivity;
 import kyklab.burner2.utils.PrefManager;
 
 public class SettingsFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
     private Preference selectPicture;
+    private Preference clearImageCache;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -27,6 +29,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         if (selectPicture != null) {
             selectPicture.setOnPreferenceClickListener(this);
         }
+        clearImageCache = findPreference(PrefManager.KEY_CLEAR_IMAGE_CACHE);
+        if (clearImageCache != null) {
+            clearImageCache.setOnPreferenceClickListener(this);
+        }
     }
 
     @Override
@@ -39,6 +45,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
         if (preference == selectPicture) {
             Intent intent = new Intent(getContext(), SelectPictureActivity.class);
             startActivity(intent);
+        } else if (preference == clearImageCache) {
+            PictureManager.clearImageCache();
+            PictureManager.forceImageReload();
         }
         return false;
     }
