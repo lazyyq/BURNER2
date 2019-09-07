@@ -88,7 +88,7 @@ public class PicturePreviewListAdapter extends RecyclerView.Adapter<PicturePrevi
             picturePreviewChecked = itemView.findViewById(R.id.picturePreviewChecked);
             pictureText = itemView.findViewById(R.id.pictureText);
 
-            picturePreview.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     PrefManager.getInstance().setSelectedPictureIndex(getAdapterPosition());

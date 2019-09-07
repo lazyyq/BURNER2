@@ -76,7 +76,7 @@ public class SelectPictureActivity extends AppCompatActivity implements SharedPr
         GridLayoutManager layoutManager = new GridLayoutManager(
                 this, PICTURE_LIST_SPAN_COUNT);
         mRecyclerView.setLayoutManager(layoutManager);
-        int margin = getResources().getDimensionPixelSize(R.dimen.picture_list_margin);
+        int margin = getResources().getDimensionPixelSize(R.dimen.picture_preview_list_margin);
         GridLayoutItemDecoration decoration =
                 new GridLayoutItemDecoration(margin, margin, margin, margin * 4);
         mRecyclerView.addItemDecoration(decoration);
