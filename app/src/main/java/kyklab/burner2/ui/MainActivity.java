@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mRotateLayout = findViewById(R.id.rotateLayout);
         setupFab();
         PictureManager.getInstance().updatePictureList();
+        setupImageView();
         loadPicture();
 
         batteryLimiter = new BatteryLimiter(this, findViewById(R.id.coordinatorLayout));
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
 
         if (mNeedsRefresh) {
+            setupImageView();
             loadPicture();
             mNeedsRefresh = false;
         }
@@ -121,9 +123,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void loadPicture() {
+    private void setupImageView() {
         int rotateAngle = Integer.parseInt(PrefManager.getInstance().getRotateAngle());
         mRotateLayout.setAngle(rotateAngle);
+        ImageView.ScaleType scaleType;
+        switch (PrefManager.getInstance().getScaleType()) {
+            default:
+            case PrefManager.ImageScaleType.DEFAULT:
+                scaleType = ImageView.ScaleType.FIT_CENTER;
+                break;
+            case PrefManager.ImageScaleType.CENTER:
+                scaleType = ImageView.ScaleType.CENTER;
+                break;
+            case PrefManager.ImageScaleType.CENTER_CROP:
+                scaleType = ImageView.ScaleType.CENTER_CROP;
+                break;
+            case PrefManager.ImageScaleType.FIT_XY:
+                scaleType = ImageView.ScaleType.FIT_XY;
+                break;
+        }
+        mImageView.setScaleType(scaleType);
+    }
+
+    private void loadPicture() {
         PictureItem pictureItem = PictureManager.getInstance().getPictureList()
                 .get(PrefManager.getInstance().getSelectedPictureIndex());
         Object picture = pictureItem.getPicture();
@@ -256,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case PrefManager.KEY_SELECTED_PICTURE_INDEX:
             case PrefManager.KEY_ROTATE_ANGLE:
+            case PrefManager.KEY_SCALE_TYPE:
                 mNeedsRefresh = true;
                 break;
         }

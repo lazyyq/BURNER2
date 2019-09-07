@@ -16,10 +16,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:layout_height="match_parent"
             android:id="@+id/mainImage"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY" />
+            android:background="@android:color/black" />
 
     </com.github.rongi.rotate_layout.layout.RotateLayout>
 

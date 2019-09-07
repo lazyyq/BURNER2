@@ -19,6 +19,16 @@
             android:title="Rotate picture"
             app:iconSpaceReserved="false" />
 
+        <ListPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="none"
+            android:entries="@array/scale_type_entries"
+            android:entryValues="@array/scale_type_entry_values"
+            android:key="scale_type"
+            android:title="Scale picture"
+            app:iconSpaceReserved="false" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

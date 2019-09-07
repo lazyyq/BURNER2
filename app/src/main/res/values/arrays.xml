@@ -15,4 +15,18 @@
         <item>270</item>
     </string-array>
 
+    <string-array name="scale_type_entries">
+        <item>Default</item>
+        <item>Center</item>
+        <item>CenterCrop</item>
+        <item>FitXY</item>
+    </string-array>
+
+    <string-array name="scale_type_entry_values">
+        <item>Default</item>
+        <item>Center</item>
+        <item>CenterCrop</item>
+        <item>FitXY</item>
+    </string-array>
+
 </resources>

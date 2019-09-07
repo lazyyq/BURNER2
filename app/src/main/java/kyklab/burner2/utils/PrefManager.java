@@ -11,6 +11,7 @@ public class PrefManager {
     public static final String KEY_SELECT_PICTURE = "select_picture";
     public static final String KEY_SELECTED_PICTURE_INDEX = "selected_picture_index";
     public static final String KEY_ROTATE_ANGLE = "rotation";
+    public static final String KEY_SCALE_TYPE = "scale_type";
     public static final String KEY_BATTERY_LIMIT = "battery_limit";
     public static final String KEY_BATTERY_LIMIT_ENABLED = "battery_limit_enabled";
     public static final String KEY_KEEP_SCREEN_ON = "keep_screen_on";
@@ -59,6 +60,14 @@ public class PrefManager {
         editor.putString(KEY_ROTATE_ANGLE, s).apply();
     }
 
+    public String getScaleType() {
+        return pref.getString(KEY_SCALE_TYPE, ImageScaleType.DEFAULT);
+    }
+
+    public void setScaleType(String s) {
+        editor.putString(KEY_SCALE_TYPE, s).apply();
+    }
+
     public int getBatteryLimit() {
         return pref.getInt(KEY_BATTERY_LIMIT, 15);
     }
@@ -105,5 +114,12 @@ public class PrefManager {
 
     private static class LazyHolder {
         static final PrefManager INSTANCE = new PrefManager();
+    }
+
+    public class ImageScaleType {
+        public static final String DEFAULT = "Default";
+        public static final String CENTER = "Center";
+        public static final String CENTER_CROP = "CenterCrop";
+        public static final String FIT_XY = "FitXY";
     }
 }
