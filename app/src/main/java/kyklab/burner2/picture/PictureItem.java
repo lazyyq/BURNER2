@@ -5,17 +5,19 @@ import androidx.annotation.StringRes;
 
 import java.util.Objects;
 
-public class PictureItem<T, S, M> {
+import kyklab.burner2.BuildConfig;
+
+public class PictureItem<T, S> {
     private int name;
     private T picture;
     private S thumbnail;
-    private M metadata;
+    private Object versionMetadata;
 
-    public PictureItem(@StringRes int name, T picture, @Nullable S thumbnail, @Nullable M metadata) {
+    public PictureItem(@StringRes int name, T picture, @Nullable S thumbnail, @Nullable Object versionMetadata) {
         this.name = name;
         this.picture = picture;
         this.thumbnail = thumbnail;
-        this.metadata = metadata;
+        this.versionMetadata = versionMetadata;
     }
 
     public int getName() {
@@ -42,27 +44,27 @@ public class PictureItem<T, S, M> {
         this.thumbnail = thumbnail;
     }
 
-    public M getMetadata() {
-        return metadata;
+    public Object getVersionMetadata() {
+        return versionMetadata != null ? versionMetadata : BuildConfig.VERSION_CODE;
     }
 
-    public void setMetadata(M metadata) {
-        this.metadata = metadata;
+    public void setVersionMetadata(Object versionMetadata) {
+        this.versionMetadata = versionMetadata;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PictureItem<?, ?, ?> that = (PictureItem<?, ?, ?>) o;
+        PictureItem<?, ?> that = (PictureItem<?, ?>) o;
         return name == that.name &&
                 picture.equals(that.picture) &&
                 Objects.equals(thumbnail, that.thumbnail) &&
-                Objects.equals(metadata, that.metadata);
+                Objects.equals(versionMetadata, that.versionMetadata);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, picture, thumbnail, metadata);
+        return Objects.hash(name, picture, thumbnail, versionMetadata);
     }
 }

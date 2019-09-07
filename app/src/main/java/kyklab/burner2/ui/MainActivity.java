@@ -126,8 +126,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         PictureItem pictureItem = PictureManager.getInstance().getPictureList()
                 .get(PrefManager.getInstance().getSelectedPictureIndex());
         Object picture = pictureItem.getPicture();
-        ObjectKey key = new ObjectKey(pictureItem.getMetadata() != null
-                ? pictureItem.getMetadata() : picture);
+        ObjectKey key = new ObjectKey(pictureItem.getVersionMetadata());
         Glide.with(this)
                 .load(picture)
                 .signature(key)

@@ -43,8 +43,7 @@ public class PicturePreviewListAdapter extends RecyclerView.Adapter<PicturePrevi
         PictureItem pictureItem = mPictureList.get(position);
         Object thumbnail = pictureItem.getThumbnail() != null
                 ? pictureItem.getThumbnail() : pictureItem.getPicture();
-        ObjectKey key = new ObjectKey(pictureItem.getMetadata() != null
-                ? pictureItem.getMetadata() : thumbnail);
+        ObjectKey key = new ObjectKey(pictureItem.getVersionMetadata());
         Glide.with(pContext)
                 .load(thumbnail)
                 .signature(key)

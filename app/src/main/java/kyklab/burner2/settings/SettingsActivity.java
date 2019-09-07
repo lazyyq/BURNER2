@@ -53,8 +53,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         PictureItem pictureItem = PictureManager.getInstance().getPictureList()
                 .get(PrefManager.getInstance().getSelectedPictureIndex());
         Object picture = pictureItem.getPicture();
-        ObjectKey key = new ObjectKey(pictureItem.getMetadata() != null
-                ? pictureItem.getMetadata() : picture);
+        ObjectKey key = new ObjectKey(pictureItem.getVersionMetadata());
         Glide.with(this)
                 .load(picture)
                 .centerCrop()
