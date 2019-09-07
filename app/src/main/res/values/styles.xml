@@ -1,9 +1,15 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">?colorSurface</item>
+        <item name="colorPrimaryDark">?colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">?colorPrimary</item>
+        <item name="android:navigationBarColor">?colorPrimary</item>
+        <item name="android:navigationBarDividerColor">?colorControlHighlight</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="floatingActionButtonStyle">@style/AppTheme.FloatingActionButton</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -12,6 +18,8 @@
     </style>
 
     <style name="AppTheme.NoActionBar.Fullscreen">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
         <!-- Allow screen to draw behind system bars -->
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
@@ -19,6 +27,16 @@
     </style>
 
     <style name="AppTheme.BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar" />
+
+    <style name="AppTheme.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">@color/colorAccent</item>
+        <item name="tint">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme.FloatingActionButton.Mini">
+        <item name="backgroundTint">@android:color/holo_blue_light</item>
+        <item name="tint">@android:color/black</item>
+    </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="android:textSize">14sp</item>

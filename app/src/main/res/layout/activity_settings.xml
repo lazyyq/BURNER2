@@ -16,8 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?colorSurface"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:contentScrim="?colorPrimary"
             app:toolbarId="@+id/settings_toolbar">
 
             <ImageView

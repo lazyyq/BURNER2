@@ -2,7 +2,6 @@ package kyklab.burner2.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,10 +10,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
 import com.github.rongi.rotate_layout.layout.RotateLayout;
+import com.leinardi.android.speeddial.FabWithLabelView;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
@@ -135,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setupFab() {
         mFab = findViewById(R.id.fab);
-        mFab.getMainFab().setImageTintList(ColorStateList.valueOf(Color.WHITE));
         mFab.setOnChangeListener(new SpeedDialView.OnChangeListener() {
             @Override
             public boolean onMainActionSelected() {
@@ -150,18 +150,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        mFab.addActionItem(
+        FabWithLabelView[] fabWithLabelView = new FabWithLabelView[2];
+
+        fabWithLabelView[0] = mFab.addActionItem(
                 new SpeedDialActionItem
-                        .Builder(R.id.fab_settings, R.drawable.ic_settings_white_24dp)
-                        .setTheme(android.R.style.Theme_Material_Light)
+                        .Builder(R.id.fab_settings, AppCompatResources.getDrawable(this,
+                        R.drawable.ic_settings_white_24dp))
+                        .setFabImageTintColor(Color.BLACK)
                         .setLabel("Settings")
                         .create());
-        mFab.addActionItem(
+        if (fabWithLabelView[0] != null) {
+            fabWithLabelView[0].setSpeedDialActionItem(
+                    fabWithLabelView[0].getSpeedDialActionItemBuilder().create());
+        }
+
+        fabWithLabelView[1] = mFab.addActionItem(
                 new SpeedDialActionItem
-                        .Builder(R.id.fab_temp, R.drawable.ic_settings_white_24dp)
+                        .Builder(R.id.fab_temp, AppCompatResources.getDrawable(this,
+                        R.drawable.ic_settings_white_24dp))
+                        .setFabImageTintColor(Color.BLACK)
                         .setLabel("temp")
-                        .setTheme(android.R.style.Theme_Material_Light)
                         .create());
+        if (fabWithLabelView[1] != null) {
+            fabWithLabelView[1].setSpeedDialActionItem(
+                    fabWithLabelView[1].getSpeedDialActionItemBuilder().create());
+        }
 
         mFab.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
             @Override
