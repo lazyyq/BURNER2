@@ -20,6 +20,7 @@ public class PictureManager {
     public static final String CUSTOM_PICTURE_FILENAME = "custom.jpg";
     public static final String CUSTOM_PICTURE_PATH =
             App.getContext().getFilesDir().getPath() + File.separator + CUSTOM_PICTURE_FILENAME;
+    private static final String TAG = "PictureManager";
     private static final List<PictureItem> builtInPictures =
             Arrays.<PictureItem>asList(
                     new PictureItem<>(R.string.picture_1, R.drawable.pic_1, R.drawable.pic_1_thumbnail, null),
@@ -35,7 +36,6 @@ public class PictureManager {
         }
     };
     private static List<PictureItem> pictures;
-    private final String TAG = "PictureManager";
 
     private PictureManager() {
         pictures = new ArrayList<>();
