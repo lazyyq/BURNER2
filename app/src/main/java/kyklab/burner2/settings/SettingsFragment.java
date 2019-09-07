@@ -25,11 +25,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         setPreferencesFromResource(R.xml.preference, rootKey);
 
-        selectPicture = findPreference(PrefManager.KEY_SELECT_PICTURE);
+        selectPicture = findPreference(PrefManager.Key.SELECT_PICTURE);
         if (selectPicture != null) {
             selectPicture.setOnPreferenceClickListener(this);
         }
-        clearImageCache = findPreference(PrefManager.KEY_CLEAR_IMAGE_CACHE);
+        clearImageCache = findPreference(PrefManager.Key.CLEAR_IMAGE_CACHE);
         if (clearImageCache != null) {
             clearImageCache.setOnPreferenceClickListener(this);
         }

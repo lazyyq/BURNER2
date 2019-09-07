@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         switch (s) {
-            case PrefManager.KEY_MAX_BRIGHTNESS:
+            case PrefManager.Key.MAX_BRIGHTNESS:
                 if (mFullscreen) {
                     if (PrefManager.getInstance().getMaxBrightness()) {
                         ScreenUtils.setMaxBrightness(this);
@@ -276,9 +276,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
                 break;
-            case PrefManager.KEY_SELECTED_PICTURE_INDEX:
-            case PrefManager.KEY_ROTATE_ANGLE:
-            case PrefManager.KEY_SCALE_TYPE:
+            case PrefManager.Key.SELECTED_PICTURE_INDEX:
+            case PrefManager.Key.ROTATE_ANGLE:
+            case PrefManager.Key.SCALE_TYPE:
                 mNeedsRefresh = true;
                 break;
         }

@@ -64,7 +64,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         switch (s) {
-            case PrefManager.KEY_SELECTED_PICTURE_INDEX:
+            case PrefManager.Key.SELECTED_PICTURE_INDEX:
                 mNeedsRefresh = true;
                 break;
         }

@@ -51,7 +51,7 @@ public class PictureManager {
     }
 
     public static void forceImageReload(int pictureIndex) {
-        PrefManager.getInstance().removePref(PrefManager.KEY_SELECTED_PICTURE_INDEX);
+        PrefManager.getInstance().removePref(PrefManager.Key.SELECTED_PICTURE_INDEX);
         PrefManager.getInstance().setSelectedPictureIndex(pictureIndex);
     }
 

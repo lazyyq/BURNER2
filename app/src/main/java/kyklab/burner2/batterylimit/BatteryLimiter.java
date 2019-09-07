@@ -117,8 +117,8 @@ public class BatteryLimiter implements SharedPreferences.OnSharedPreferenceChang
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         switch (s) {
-            case PrefManager.KEY_BATTERY_LIMIT:
-            case PrefManager.KEY_BATTERY_LIMIT_ENABLED:
+            case PrefManager.Key.BATTERY_LIMIT:
+            case PrefManager.Key.BATTERY_LIMIT_ENABLED:
                 mCanceled = false;
                 break;
         }
