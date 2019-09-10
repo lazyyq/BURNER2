@@ -153,8 +153,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, SharedPreference
                         .setLabel("Settings")
                         .create())
         if (fabWithLabelView[0] != null) {
-            fabWithLabelView[0].setSpeedDialActionItem(
-                    fabWithLabelView[0].getSpeedDialActionItemBuilder().create())
+            fabWithLabelView[0]!!.setSpeedDialActionItem(
+                    fabWithLabelView[0]!!.getSpeedDialActionItemBuilder().create())
         }
 
         fabWithLabelView[1] = mFab!!.addActionItem(
@@ -165,8 +165,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, SharedPreference
                         .setLabel("temp")
                         .create())
         if (fabWithLabelView[1] != null) {
-            fabWithLabelView[1].setSpeedDialActionItem(
-                    fabWithLabelView[1].getSpeedDialActionItemBuilder().create())
+            fabWithLabelView[1]!!.setSpeedDialActionItem(
+                    fabWithLabelView[1]!!.getSpeedDialActionItemBuilder().create())
         }
 
         mFab!!.setOnActionSelectedListener { actionItem ->
