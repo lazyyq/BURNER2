@@ -1,14 +1,17 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
-        <item name="colorPrimary">?colorSurface</item>
-        <item name="colorPrimaryDark">?colorPrimary</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:statusBarColor">?colorPrimary</item>
-        <item name="android:navigationBarColor">?colorPrimary</item>
+        <item name="android:statusBarColor">?colorSurface</item>
+        <item name="android:navigationBarColor">?colorSurface</item>
         <item name="android:navigationBarDividerColor">?colorControlHighlight</item>
         <item name="floatingActionButtonStyle">@style/AppTheme.FloatingActionButton</item>
         <item name="bottomAppBarStyle">@style/AppTheme.BottomAppBar</item>
+        <item name="actionBarStyle">@style/AppTheme.ActionBar</item>
+
+        <!-- Light theme -->
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
     </style>
@@ -25,6 +28,10 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+    <style name="AppTheme.ActionBar" parent="Widget.MaterialComponents.Light.ActionBar.Solid">
+        <item name="background">?colorSurface</item>
     </style>
 
     <style name="AppTheme.BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar" />

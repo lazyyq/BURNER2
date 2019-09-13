@@ -2,14 +2,15 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
-        <item name="colorPrimary">?colorSurface</item>
-        <item name="colorPrimaryDark">?colorPrimary</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:statusBarColor">?colorPrimary</item>
-        <item name="android:navigationBarColor">?colorPrimary</item>
+        <item name="android:statusBarColor">?colorSurface</item>
+        <item name="android:navigationBarColor">?colorSurface</item>
         <item name="android:navigationBarDividerColor">?colorControlHighlight</item>
         <item name="floatingActionButtonStyle">@style/AppTheme.FloatingActionButton</item>
         <item name="bottomAppBarStyle">@style/AppTheme.BottomAppBar</item>
+        <item name="actionBarStyle">@style/AppTheme.ActionBar</item>
     </style>
 
 </resources>
