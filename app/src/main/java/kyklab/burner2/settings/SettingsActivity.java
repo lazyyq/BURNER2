@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
 
+import kyklab.burner2.App;
 import kyklab.burner2.R;
 import kyklab.burner2.picture.PictureItem;
 import kyklab.burner2.picture.PictureManager;
@@ -24,6 +25,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        App.end("SettingsActivity");
         Toolbar toolbar = findViewById(R.id.settings_toolbar);
         setSupportActionBar(toolbar);
 

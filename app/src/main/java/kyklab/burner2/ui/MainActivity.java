@@ -19,6 +19,7 @@ import com.leinardi.android.speeddial.FabWithLabelView;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
+import kyklab.burner2.App;
 import kyklab.burner2.R;
 import kyklab.burner2.batterylimit.BatteryLimiter;
 import kyklab.burner2.picture.PictureItem;
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPause() {
         super.onPause();
 
+        App.start();
         batteryLimiter.stop();
         unsetFullscreen();
         ScreenUtils.unsetKeepScreenOn(this);
